@@ -1,2 +1,6 @@
 # gitignore Nam
 /src/server/node_modules
+
+
+# Python
+**/venv/
