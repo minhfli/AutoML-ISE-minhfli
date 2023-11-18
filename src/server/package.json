@@ -1,0 +1,10 @@
+{
+  "name": "automl-platform",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "https://github.com/XuananLe/AutoML-Platform.git",
+  "license": "MIT",
+  "dependencies": {
+    "express": "^4.18.2"
+  }
+}
