@@ -1,10 +1,13 @@
 import jwt from 'jsonwebtoken'
 import bcrypt from 'bcrypt'
-import config from '#src/config/config.js'
-import { generateToken } from '#api/utils/jwt.util.js'
-import User from '#api/models/user.model.js'
+// @ts-ignore
+import config from '#src/config/config.ts'
+// @ts-ignore
+import { generateToken } from '#api/utils/jwt.util'
+// @ts-ignore
+import User from '#api/models/user.model.ts'
 
-const Login = async (req, res, next) => {
+const Login = async (req : any, res : any, next : any) => {
   try {
     const { email, password } = req.body
     const user = await User.findOne({ email })
@@ -25,7 +28,7 @@ const Login = async (req, res, next) => {
   }
 }
 
-const Signup = async (req, res) => {
+const Signup = async (req : any, res : any) => {
   const salt = 10
   try {
     const { name, email, password } = req.body
@@ -57,7 +60,7 @@ const Signup = async (req, res) => {
   }
 }
 
-const RefreshToken = async (req, res) => {
+const RefreshToken = async (req : any, res: any) => {
   const refreshTokenFromClient = req.headers['x-refresh-token'] || req.body.refreshToken
   if (!refreshTokenFromClient) {
     return res.status(403).json({ message: 'No token provided' })
@@ -75,8 +78,7 @@ const RefreshToken = async (req, res) => {
     return res.status(403).json({ message: 'Invalid refresh token' })
   }
 }
-
-const updateRefreshToken = async (id, refreshToken) => {
+const updateRefreshToken = async (id : any, refreshToken : any) => {
   try {
     await User.findByIdAndUpdate(id, { refresh_token: refreshToken }, { new: true })
   } catch (err) {
