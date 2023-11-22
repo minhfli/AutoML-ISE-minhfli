@@ -9,8 +9,6 @@ const prisma = new PrismaClient()
 
 const app = express()
 
-
-
 app.use(cors())
 app.use(cookieParser())
 app.use(bodyParser.json({ limit: '30mb' }))
