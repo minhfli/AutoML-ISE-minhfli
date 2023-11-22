@@ -1,5 +1,6 @@
 "use strict";
-// import { Router } from 'express'
+Object.defineProperty(exports, "__esModule", { value: true });
+const express_1 = require("express");
 // import isAuth from '#api/middlewares/auth.middleware.js'
 // import authRouter from './auth.route.js'
 // import projectRouter from './projects.route.js'
@@ -8,7 +9,7 @@
 // import imageRouter from './images.route.js'
 // import experimentRouter from './experiments.route.js'
 // import runRouter from './runs.route.js'
-// const routeV1 = Router()
+const routeV1 = (0, express_1.Router)();
 // routeV1.use('/auth', authRouter)
 // routeV1.use('/projects', [isAuth], projectRouter)
 // routeV1.use('/labels', labelRouter)
@@ -16,4 +17,4 @@
 // routeV1.use('/images', imageRouter)
 // routeV1.use('/experiments', experimentRouter)
 // routeV1.use('/runs', runRouter)
-// export default routeV1
+exports.default = routeV1;
