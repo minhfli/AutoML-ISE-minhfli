@@ -5,6 +5,13 @@
 # Python
 **/venv/
 
+
+# ML Service Ignore
+/src/mlservice/image_classifier/datasets
+/src/mlservice/image_classifier/trained_models
+/src/mlservice/image_classifier/ag_automm_tutorial_imgcls
+/src/mlservice/image_classifier/test.py
+
 # client
 # See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
 
