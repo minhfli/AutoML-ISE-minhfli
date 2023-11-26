@@ -6,7 +6,7 @@ export default async function middleware(
   request: NextRequest,
   event: NextFetchEvent
 ): Promise<Response | undefined> {
-  const ip = request.ip ?? "127.0.0.1:30033";
+  const ip = request.ip ?? "127.0.0.1:3000";
 
   // ratelimit for demo app: https://demo.useliftoff.com/
   if (
