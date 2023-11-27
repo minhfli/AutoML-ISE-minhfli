@@ -1,2 +1,2 @@
-autogluon~=0.8.2
-numpy~=1.26.2
+autogluon==1.0.0b20231126
+split-folders==0.5.1
