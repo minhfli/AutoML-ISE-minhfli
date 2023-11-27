@@ -13,6 +13,8 @@ import timm
 import torch.optim as optim
 import _pickle as cPickle
 
+from src.mlservice.image_classifier.data.process_image import split_imagefolder
+
 
 def set_seed(seed=None):
     if seed:
@@ -45,6 +47,8 @@ class Trainer(object):
         num_classes = len(os.listdir(os.path.join('./datasets/dataset_splits', 'train')))
         self.model = timm.create_model(model_name, pretrained=True, num_classes=num_classes)
         img_size = self.model.default_cfg['input_size'][1:]
+
+        train_df, valid_df, test_df = split_imagefolder(dataset_folder, './datasets/dataset_splits')
         self.train_loader, self.valid_loader = get_dataloader(
             './datasets/dataset_splits', batch_size=batch_size, img_size=img_size,
             num_workers=num_workers
@@ -147,7 +151,6 @@ class Trainer(object):
             else:
                 print('Validation loss did not improve from %.3f, loading last checkpoint...' % self.best_loss)
                 self.load_model()
-                print(self.best_loss)
             self.best_loss = final_val_loss
             if done:
                 break
@@ -155,12 +158,12 @@ class Trainer(object):
 
 if __name__ == '__main__':
     trainer = Trainer(
-        dataset_folder='./datasets/dataset_splits',
-        model_name='edgenext_small.usi_in1k',
+        dataset_folder='./datasets/flowers',
+        model_name='swin_small_patch4_window7_224',
         # Specify model dir if you want to continue from last checkpoint
-        model_dir='src/mlservice/image_classifier/trained_models/edgenext_small.usi_in1k_23111700934489004809',
+        # model_dir='src/mlservice/image_classifier/trained_models/edgenext_small.usi_in1k_23111700934489004809',
         batch_size=16,
         lr=1e-2, min_lr=1e-5, weight_decay=1e-5,
         T_0=1, T_mult=1, num_workers=8)
 
-    trainer.train(n_epochs=4, time_limit=100)
+    trainer.train(n_epochs=4, time_limit=80)
