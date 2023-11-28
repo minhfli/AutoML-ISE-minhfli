@@ -26,6 +26,7 @@ model Project {
   uploaded             Boolean
   runs                 Run[]
   models               Model[]
+  datasets             Dataset[]
   User                 User?   @relation(fields: [author_id], references: [id])
   author_id            Int?
 }
@@ -51,6 +52,13 @@ model Model {
   author_id       Int?
   name            String
   url             String
+}
+
+model Dataset {
+  id              Int       @id @default(autoincrement())
+  bucket_url      String
+  Project         Project?  @relation(fields: [project_id], references:  [id])
+  project_id      Int?
 }
 
 enum Task {
