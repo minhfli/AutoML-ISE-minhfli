@@ -6,3 +6,64 @@ datasource postgresql {
 generator client {
   provider = "prisma-client-js"
 }
+
+model User {
+  id         Int       @id @default(autoincrement())
+  email      String    @unique
+  name       String
+  avatar_url String
+  password   String
+  projects   Project[]
+  model      Model[]
+}
+
+model Project {
+  id                   Int     @id @default(autoincrement())
+  name                 String
+  task                 Task
+  expectation_accuracy Float
+  description          String
+  uploaded             Boolean
+  runs                 Run[]
+  models               Model[]
+  datasets             Dataset[]
+  User                 User?   @relation(fields: [author_id], references: [id])
+  author_id            Int?
+}
+
+model Run {
+  id              Int      @id @default(autoincrement())
+  name            String
+  status          String
+  best_model_url  String
+  train_accuracy  Float
+  train_loss      Float
+  val_accuracy    Float
+  val_loss        Float
+  Project         Project? @relation(fields: [project_id], references: [id])
+  project_id      Int?
+}
+
+model Model {
+  id              Int       @id @default(autoincrement())
+  Project         Project?  @relation(fields: [project_id], references:  [id])
+  project_id      Int?
+  User            User?  @relation(fields: [author_id], references:  [id])
+  author_id       Int?
+  name            String
+  url             String
+}
+
+model Dataset {
+  id              Int       @id @default(autoincrement())
+  bucket_url      String
+  Project         Project?  @relation(fields: [project_id], references:  [id])
+  project_id      Int?
+}
+
+enum Task {
+  IMAGE_CLASSIFICATION   @map("Image Classification")
+  OBJECT_DETECTION       @map("Object Detection")
+  TABULAR_CLASSIFICATION @map("Tabular Classification")
+  TEXT_CLASSIFICATION    @map("Text Classification")
+}
