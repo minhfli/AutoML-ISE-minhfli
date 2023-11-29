@@ -41,7 +41,7 @@ yarn-error.log*
 
 # vercel
 .vercel
-
+src/config/service-account-gcs.json
 # GCP
 src/config/service-account-*.json
 /src/config/service-account-*.json
@@ -51,3 +51,5 @@ service-account-*.json
 
 # migrations
 /prisma/migrations
+
+public/*
