@@ -3,10 +3,14 @@ import dotenv from 'dotenv';
 dotenv.config();
 
 const port = process.env.PORT;
-const databaseURL = process.env.DATABASE_URL;
+const mongoURL = process.env.DATABASE_URL;
+const postgresURL = process.env.POSTGRES_URL;
+const frontendPort = process.env.FRONTEND_PORT;
 const config = {
     port,
-    databaseURL,
+    mongoURL,
+    postgresURL,
+    frontendPort
 };
 
 export default config;
