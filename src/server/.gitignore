@@ -47,6 +47,7 @@ src/config/service-account-*.json
 /src/config/service-account-*.json
 service-account-*.json
 
+
 /home/xuananle/Documents/AutoML-Platform/src/server/src/config/service-account-gcs.json
 
 # migrations
