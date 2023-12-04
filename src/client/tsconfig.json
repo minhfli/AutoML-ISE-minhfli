@@ -28,7 +28,7 @@
     "**/*.ts",
     "**/*.tsx",
     ".next/types/**/*.ts",
-    "components/Card.tsx",
+    "components/*.tsx",
     "src/**/*.tsx",
     "src/**/*.ts"
   ],
