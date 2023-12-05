@@ -1,19 +1,26 @@
 "use client";
-import React, {useEffect} from "react";
+import React, {useEffect, useRef} from "react";
 import ClassDivider from "@/components/ClassDivider";
 
 const TrainImage = () => {
     const [classDividers, setClassDividers] = React.useState([
         {key: 1, title: 1},
     ]);
-
+    const currentClass = useRef<number>(1);
     const increaseCount = () => {
-        const newCount = classDividers.length + 1;
+        currentClass.current += 1;
+        const newCount = currentClass.current;
         setClassDividers((prevDividers) => [
             ...prevDividers,
             {key: newCount, title: newCount},
         ]);
     };
+
+    const deleteItem = (key: number) => {
+        setClassDividers((prevDividers) =>
+            prevDividers.filter((item) => item.key !== key)
+        );
+    }
 
     useEffect(() => {
         const handleBeforeUnload = (event: any) => {
@@ -37,13 +44,7 @@ const TrainImage = () => {
                     <div key={classDivider.key}>
                         <ClassDivider
                             title={classDivider.title}
-                            onRemove={() => {
-                                setClassDividers((prevDividers) =>
-                                    prevDividers.filter(
-                                        (divider) => divider.key !== classDivider.key
-                                    )
-                                );
-                            }}
+                            onRemove={deleteItem}
                         />
                     </div>
                 ))}
