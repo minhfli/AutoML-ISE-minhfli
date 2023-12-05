@@ -3,24 +3,23 @@ import React, { useRef, useState } from "react";
 
 interface Props {
   title: number;
-  onRemove: () => void;
+  onRemove: (title : number) => void;
 }
 
-const ClassDivider = ({ title = 1, onRemove}: Props) => {
+const ClassDivider = ({ title = 1, onRemove }: Props) => {
   return (
     <div className="flex w-1/4 h-40 card bg-base-300 rounded-box ml-40 mb-5">
       <div className=" flex flex-col p-4">
         <div className="flex items-center justify-between mb-4">
           <h2 className="card-title">Class {title}</h2>
-          <button className="btn btn-ghost items-center" onClick={onRemove}>
+          <button className="btn btn-ghost items-center" onClick={()=>onRemove(title)}>
             <svg
               fill="#000000"
               viewBox="-1.7 0 20.4 20.4"
               xmlns="http://www.w3.org/2000/svg"
-                className="w-6 h-6"
+              className="w-6 h-6"
             >
-              
-                <path d="M16.417 10.283A7.917 7.917 0 1 1 8.5 2.366a7.916 7.916 0 0 1 7.917 7.917zm-6.804.01 3.032-3.033a.792.792 0 0 0-1.12-1.12L8.494 9.173 5.46 6.14a.792.792 0 0 0-1.12 1.12l3.034 3.033-3.033 3.033a.792.792 0 0 0 1.12 1.119l3.032-3.033 3.033 3.033a.792.792 0 0 0 1.12-1.12z"></path>
+              <path d="M16.417 10.283A7.917 7.917 0 1 1 8.5 2.366a7.916 7.916 0 0 1 7.917 7.917zm-6.804.01 3.032-3.033a.792.792 0 0 0-1.12-1.12L8.494 9.173 5.46 6.14a.792.792 0 0 0-1.12 1.12l3.034 3.033-3.033 3.033a.792.792 0 0 0 1.12 1.119l3.032-3.033 3.033 3.033a.792.792 0 0 0 1.12-1.12z"></path>
             </svg>
           </button>
         </div>
