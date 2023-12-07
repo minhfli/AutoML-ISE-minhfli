@@ -8,7 +8,7 @@ train_df, valid_df, test_df = split_imagefolder('./datasets/flowers', './dataset
 
 model_path = f"./trained_models/{datetime.datetime.now().strftime('%y%m%s%H%M%S')}-automm_flowers"
 predictor = MultiModalPredictor(label="label", path=model_path)
-predictor.fit(train_data=train_df, tuning_data=valid_df, time_limit=80)
+predictor.fit(train_data=train_df, tuning_data=valid_df, time_limit=30)
 
 score = predictor.evaluate(test_df, metrics=['accuracy'])
 

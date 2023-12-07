@@ -15,7 +15,7 @@ class ImageDataset(Dataset):
 
         self.label_encoder = preprocessing.LabelEncoder()
         self.img_labels.label = self.label_encoder.fit_transform(self.img_labels.label)
-        print(self.img_labels.label.unique())
+        # print(self.img_labels.label.unique())
 
     def __len__(self):
         return len(self.img_labels)
@@ -36,10 +36,10 @@ def get_dataloader(img_dir='./datasets/dataset_splits/', batch_size=64, img_size
     data_transforms = {
         'train': transforms.Compose([
             transforms.ToPILImage(),
-            transforms.RandomResizedCrop(img_size, (.5, 1.0), antialias=True),
-            # transforms.RandomHorizontalFlip(p=0.5),
-            # transforms.RandomVerticalFlip(p=0.5),
-            # transforms.ColorJitter(brightness=0.2, contrast=0.1, saturation=0.1),
+            transforms.RandomResizedCrop(img_size, (.4, 1.0), antialias=True),
+            transforms.RandomHorizontalFlip(p=0.5),
+            transforms.RandomVerticalFlip(p=0.5),
+            transforms.ColorJitter(brightness=0.2, contrast=0.1, saturation=0.1),
             transforms.ToTensor(),
             transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225]),
         ]),
