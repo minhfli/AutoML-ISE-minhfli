@@ -1,6 +1,9 @@
 import React from "react";
 
 export const Webcam = () => {
+    const handleButtonClick = () => {
+        console.log("Webcam");
+    }
     return (
         <>
             <button className="btn btn-primary">
