@@ -8,8 +8,14 @@ interface Props {
 }
 
 const ClassDivider = ({ title = 1, onRemove }: Props) => {
+  const [hasUploadedFile, setHasUploadedFile] = useState(false);
+
+  const handleFileUpload = () => {
+    // Xử lý khi có file được tải lên
+    setHasUploadedFile(true);
+  };
   return (
-    <div className="flex w-1/4 h-40 card bg-base-300 rounded-box ml-40 mb-5">
+    <div className="flex w-1/4 ${hasUploadedFile ? 'h-60' : 'h-60'} card bg-base-300 rounded-box ml-40 mb-5">
       <div className=" flex flex-col p-4">
         <div className="flex items-center justify-between mb-4">
           <h2 className="card-title">Class {title}</h2>
@@ -41,7 +47,7 @@ const ClassDivider = ({ title = 1, onRemove }: Props) => {
               </svg>
             </div>
           </button>
-         <UploadImage/>
+         <UploadImage onUpload={handleFileUpload}/>
         </div>
       </div>
     </div>
