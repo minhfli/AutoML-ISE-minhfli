@@ -1,21 +1,24 @@
-import React, { useRef, useState } from "react";
+import React, { useState } from "react";
 import DropZone from "@/components/DropZone";
 
-const UploadImage: React.FC = () => {
+interface UploadImageProps {
+  onUpload: () => void;
+}
+
+const UploadImage: React.FC<UploadImageProps> = ({ onUpload }) => {
   const [showDropzone, setShowDropzone] = useState(false);
 
   const sleep = (milliseconds: number): Promise<void> => {
     return new Promise((resolve) => setTimeout(resolve, milliseconds));
   };
 
-  // Sử dụng hàm sleep trong hàm handleButtonClick
   const handleButtonClick = async () => {
     try {
-      // Gọi các hàm bất đồng bộ ở đây
       console.log("Start sleeping...");
-      await sleep(1000); // Sleep 1s (1000 milliseconds)
+      await sleep(1000);
       console.log("End sleeping. Continue with other async tasks...");
       setShowDropzone(true);
+      onUpload(); // Call the onUpload prop when the button is clicked
     } catch (error) {
       console.error("Error:", error);
     }
@@ -23,11 +26,7 @@ const UploadImage: React.FC = () => {
 
   const handleFilesSelected = async (files: File[]) => {
     try {
-      // Thực hiện các công việc bất đồng bộ ở đây
-      await someAsyncProcessing(files);
-      await sleep(1000); // Sleep 1s (1000 milliseconds)
-      console.log("hello")
-      // Hiển thị thông tin về mỗi file trong console
+      await sleep(1000);
       files.forEach((file, index) => {
         console.log(`File ${index + 1}: ${file.name}`);
       });
@@ -36,20 +35,8 @@ const UploadImage: React.FC = () => {
     }
   };
 
-  // Hàm mẫu bất đồng bộ
-  const someAsyncFunction = async () => {
-    // Đoạn code bất đồng bộ ở đây
-    // Ví dụ: fetch, call API, etc.
-  };
-
-  // Hàm mẫu xử lý bất đồng bộ files
-  const someAsyncProcessing = async (files: File[]) => {
-    // Đoạn code xử lý bất đồng bộ files ở đây
-    // Ví dụ: upload files, process images, etc.
-  };
-
   return (
-    <>
+    <div>
       <button className="btn btn-primary" onClick={handleButtonClick}>
         <div className="flex items-center justify-center">
           <svg
@@ -77,7 +64,7 @@ const UploadImage: React.FC = () => {
         </div>
       </button>
       {showDropzone && <DropZone onDrop={handleFilesSelected} />}
-    </>
+    </div>
   );
 };
 
