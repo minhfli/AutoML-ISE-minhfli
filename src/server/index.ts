@@ -6,13 +6,22 @@ import helmet from 'helmet'
 import multer from "multer";
 import morgan from "morgan";
 import routes from "./src/api/v1/routes/index"
-
+import {db} from "./src/api/v1/db";
+import config from "./src/config/config";
 const app = express()
+
+db.initialize().then(
+    () => {
+        console.log("Database initialized");
+    }
+).catch((err: any) => {
+    console.log("Error initializing database", err);
+});
 
 // allow front end to access
 app.use(cors(
     {
-        origin: 'http://localhost:${config.frontendPort}',
+        origin: `http://localhost:${config.frontendPort}`,
         credentials: true
     }
 ))
