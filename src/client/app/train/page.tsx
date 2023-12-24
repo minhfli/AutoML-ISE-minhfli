@@ -1,34 +1,37 @@
-"use client";
-import React, {useEffect} from "react";
 import Card from "@/components/Card";
 import Link from "next/link";
-
+import image_classification from "@/public/classification-object-detection.png";
+import tabular_classification from "@/public/tabular_classification.png";
+import language_classification from "@/public/language.png";
 const Train = () => {
     const cardsData = [
         {
             id: 1,
+            logo : image_classification,
             title: "Image Project",
             description: "Teach based on images, from files or your webcam.",
             link: "/train/image",
         },
         {
             id: 2,
-            title: "Audio Project",
+            logo : tabular_classification,
+            title: "Tabular Project",
             description:
-                "Teach based on one-second-long sounds, from files or your microphone.",
-            link: "/train/audio",
+                "Classificate, regression, or time series from CSV or Excel files.",
+            link: "/train/tabular",
         },
         {
             id: 3,
-            title: "Pose Project",
-            description: "Teach based on images, from files or your webcam.",
+            logo : language_classification,
+            title: "Language Project",
+            description: "Automatically classify text, extract or even custom your own LLM.",
             link: "/train/pose",
         },
     ];
     return (
         <div className="flex justify-center items-center h-screen space-x-4 hov">
             {cardsData.map((card) => (
-                <Card key={card.id} title={card.title} description={card.description}>
+                <Card key={card.id} title={card.title} description={card.description} logo={card.logo}>
                     <Link href={card.link}>{card.title}</Link>
                 </Card>
             ))}
