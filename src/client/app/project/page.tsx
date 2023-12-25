@@ -32,7 +32,7 @@ const Train = () => {
         <div className="flex justify-center items-center h-screen space-x-4 hov">
             {cardsData.map((card) => (
                 <Card key={card.id} title={card.title} description={card.description} logo={card.logo}>
-                    <Link href={card.link}>{card.title}</Link>
+                    <Link href={card.link} prefetch={true}>{card.title}</Link>
                 </Card>
             ))}
         </div>
