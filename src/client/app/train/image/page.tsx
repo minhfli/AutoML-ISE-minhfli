@@ -1,6 +1,6 @@
 "use client";
 import React, {useEffect, useRef} from "react";
-import ClassDivider from "@/components/ClassDivider";
+import ClassDivider from "@/components/ui/ClassDivider";
 
 const TrainImage = () => {
     const [classDividers, setClassDividers] = React.useState([
@@ -16,7 +16,7 @@ const TrainImage = () => {
         ]);
     };
 
-    const deleteItem = (key: number) => {
+    const deleteItem = (key: number) => {   
         setClassDividers((prevDividers) =>
             prevDividers.filter((item) => item.key !== key)
         );
