@@ -1,4 +1,4 @@
-import Card from "@/components/Card";
+import Card from "@/components/ui/Card";
 import Link from "next/link";
 import image_classification from "@/public/classification-object-detection.png";
 import tabular_classification from "@/public/tabular_classification.png";
@@ -25,7 +25,7 @@ const Train = () => {
             logo : language_classification,
             title: "Language Project",
             description: "Automatically classify text, extract or even custom your own LLM.",
-            link: "/train/pose",
+            link: "/train/language",
         },
     ];
     return (
