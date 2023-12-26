@@ -28,7 +28,7 @@
     "**/*.ts",
     "**/*.tsx",
     ".next/types/**/*.ts",
-    "components/*.tsx",
+    "src/components/*.tsx",
     "src/**/*.tsx",
     "src/**/*.ts"
   ],

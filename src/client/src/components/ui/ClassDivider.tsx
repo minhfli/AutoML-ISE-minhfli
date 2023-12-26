@@ -1,6 +1,6 @@
 "use client";
 import React, { useRef, useState } from "react";
-import UploadImage from "@/components/ui/UploadImage";
+import UploadImage from "@/src/components/ui/UploadImage";
 
 interface Props {
   title: number;
