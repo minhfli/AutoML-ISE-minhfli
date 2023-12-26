@@ -11,7 +11,7 @@ type CardProps = {
     children?: ReactNode;
 }
 
-const Card: React.FC<CardProps> = ({ title, description, children, logo, href }) => {
+const Card_Deprecated: React.FC<CardProps> = ({ title, description, children, logo, href }) => {
     return (
         <div className="card w-96 bg-base-100 hover:bg-base-200 hover:shadow-xl transition duration-300 ease-in-out transform hover:-translate-y-1" data-theme="lofi">
             <figure>
@@ -33,4 +33,4 @@ const Card: React.FC<CardProps> = ({ title, description, children, logo, href })
     );
 };
 
-export default Card;
+export default Card_Deprecated;

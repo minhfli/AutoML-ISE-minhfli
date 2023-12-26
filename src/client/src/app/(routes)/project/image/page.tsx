@@ -8,6 +8,7 @@ const TrainImage = () => {
 
     // Ref to keep track of the current class count
     const currentClass = useRef(2);
+    
 
     // Function to increase the count and add a new class divider
     const increaseCount = useCallback(() => {
@@ -37,6 +38,7 @@ const TrainImage = () => {
 
     // Rendering the component
     return (
+        
         <div className="mt-auto items-center">
             <div className="mt-40">
                 {classDividers.map((classDivider) => (
