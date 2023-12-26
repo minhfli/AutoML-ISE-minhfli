@@ -1,8 +1,15 @@
-import Card from "@/src/components/ui/card";
-import Link from "next/link";
+import Card_Deprecated from "@/src/components/ui/Card_Deprecated";
 import image_classification from "@/public/classification-object-detection.png";
 import tabular_classification from "@/public/tabular_classification.png";
 import language_classification from "@/public/language.png";
+import {
+    Card,
+    CardContent,
+    CardDescription,
+    CardFooter,
+    CardHeader,
+    CardTitle,
+} from "@/src/components/ui/card"
 
 const Train = () => {
     const cardsData = [
@@ -30,14 +37,20 @@ const Train = () => {
         },
     ];
     return (
-        <div className="flex justify-center items-center h-screen space-x-4 hov overflow-scroll">
-            {cardsData.map((card) => (
-                <Card key={card.id} title={card.title} description={card.description} logo={card.logo}
-                href = {card.link}
-                >
+        <>
+                <Card>
+                    <CardHeader >
+                        <CardTitle>Card Title</CardTitle>
+                        <CardDescription>Card Description</CardDescription>
+                    </CardHeader>
+                    <CardContent>
+                        <p>Card Content</p>
+                    </CardContent>
+                    <CardFooter>
+                        <p>Card Footer</p>
+                    </CardFooter>
                 </Card>
-            ))}
-        </div>
+        </>
     );
 };
 
