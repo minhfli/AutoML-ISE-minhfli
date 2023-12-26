@@ -23,13 +23,13 @@ export default function RootLayout({
         <ThemeProvider
           attribute="class"
           defaultTheme="light"
-          enableSystem
+          enableSystem={true}
           disableTransitionOnChange
         >
           <div className="mode-toggle-container">
             <ModeToggle />
           </div>
-            {children}
+          {children}
         </ThemeProvider>
       </body>
     </html>

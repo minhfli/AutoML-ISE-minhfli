@@ -2,7 +2,8 @@ import Image, { StaticImageData } from "next/image";
 import React, { ReactNode } from "react";
 import Link from "next/link";
 
-export type CardProps = {
+
+type CardProps = {
     title: string;
     logo: string | StaticImageData;
     description: string;
