@@ -29,7 +29,7 @@ export default function Home() {
       id: 3,
       title: "Projects",
       description: "Explore what you can do with the platform.",
-      href : "/login"
+      href : "/test"
     }
     ,
     {
@@ -59,8 +59,8 @@ export default function Home() {
               src={logo}
               alt="Huggingface Logo"
               className="dark:invert"
-              width={100}
-              height={24}
+              width={300}
+              height={96}
               priority
             />
           </Link>
