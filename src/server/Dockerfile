@@ -1,14 +1,19 @@
-FROM node:16-alpine as builder
+FROM node:lts-alpine
 
-ENV PORT=5500 
+ENV NODE_ENV=production
 
-RUN mkdir /app
-COPY ./package.json /app
-COPY ./yarn.lock /app
-WORKDIR /app
-RUN yarn install
-RUN npx prisma generate
+WORKDIR /usr/src/app
+
+COPY ["package.json", "package-lock.json*", "npm-shrinkwrap.json*", "./"]
+
+RUN npm install --production --silent && mv node_modules ../
+
 COPY . .
 
-CMD ["yarn", "dev"]
-EXPOSE 5500
+EXPOSE 3000
+
+RUN chown -R node /usr/src/app
+
+USER node
+
+CMD ["npm", "start"]
