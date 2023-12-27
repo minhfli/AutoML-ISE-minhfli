@@ -21,12 +21,12 @@ db.initialize().then(
 // allow front end to access
 app.use(cors(
     {
-        origin: `http://localhost:${config.frontendPort}`,
+        origin: `http://localhost:${config.frontendURL}`,
         credentials: true
     }
 ))
 app.use(function (req, res, next) {
-    res.header("Access-Control-Allow-Origin", "http://localhost:${config.frontendPort}"); // update to match the domain you will make the request from
+    res.header("Access-Control-Allow-Origin", `http://localhost:${config.frontendURL}`); // update to match the domain you will make the request from
     res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, Authorization, x-access-token");
     res.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
     res.header("Access-Control-Allow-Credentials", "true");
@@ -52,3 +52,7 @@ app.use((err: { status: any; message: any }, req: any, res: {
     })
 })
 
+app.post('/', (req, res) => {
+    res.send('Hello World!');
+    res.status(200);
+})

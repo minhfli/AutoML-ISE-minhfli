@@ -2,6 +2,7 @@
 import { Button } from "@/src/components/ui/button";
 import { Input } from "@/src/components/ui/input";
 import { Label } from "@/src/components/ui/label";
+import { toast } from "sonner"
 import axios from 'axios';
 import { useEffect, useState } from "react";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle, } from "@/src/components/ui/card";
@@ -158,8 +159,26 @@ export default function Index() {
                         <Button
                             onClick={async () => {
                                 await testSubmit(form, setSubmitting, setFeedback)
-                            }
-                            }
+
+                                if (feedback !== '') {
+                                    toast("Project has been created", {
+                                        description: new Date().toLocaleDateString(),
+                                        action: {
+                                            label: "Undo",
+                                            onClick: () => console.log(),
+                                        },
+                                    })
+                                }
+                                else {
+                                    toast("Failed to submit. Please try again later.", {
+                                        description: new Date().toLocaleDateString(),
+                                        action: {
+                                            label: "Undo",
+                                            onClick: () => console.log(),
+                                        },
+                                    })
+                                }
+                            }}
                         >Create Project</Button>
                     </CardFooter>
                 </Card>

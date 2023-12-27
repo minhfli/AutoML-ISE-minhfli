@@ -54,3 +54,7 @@ service-account-*.json
 /prisma/migrations
 
 public/*
+
+
+dist/*
+dist
