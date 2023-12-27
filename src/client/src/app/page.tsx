@@ -14,14 +14,14 @@ export default function Home() {
       id: 1,
       title: "Login",
       description: "Start creating your account and get started with the platform.",
-      href : "/login"
+      href: "/login"
     }
     ,
     {
       id: 2,
       title: "Learn",
       description: "Learn how we automate your ML Workflow for you!",
-      href : "/login"
+      href: "/login"
 
     }
     ,
@@ -29,14 +29,14 @@ export default function Home() {
       id: 3,
       title: "Projects",
       description: "Explore what you can do with the platform.",
-      href : "/test"
+      href: "/new"
     }
     ,
     {
       id: 4,
       title: "Deploy",
       description: "Instantly deploy your model via an API, a Web App or even a huge h5 file directly from the cloud.",
-      href : "/login"
+      href: "/login"
     }
   ]
   const tempHref: string = "#";
