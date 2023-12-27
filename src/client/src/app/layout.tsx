@@ -1,10 +1,8 @@
-import { ThemeProvider } from "@/src/components/ui/theme-provider"
-import type { Metadata } from 'next'
-import Head from 'next/head';
-import logo from '@/public/logo.png'
-import { ModeToggle } from "@/src/components/ui/toggle-mode"
-import { Inter } from 'next/font/google'
-import './globals.css'
+import { ThemeProvider } from "@/src/components/ui/theme-provider";
+import { ModeToggle } from "@/src/components/ui/toggle-mode";
+import type { Metadata } from 'next';
+import { Inter } from 'next/font/google';
+import './globals.css';
 
 const inter = Inter({ subsets: ['latin'] })
 

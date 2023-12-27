@@ -58,8 +58,7 @@ export default function Home() {
             <Image
               src={logo}
               alt="Huggingface Logo"
-              className="dark:invert"
-              width={300}
+              width={100}
               height={96}
               priority
             />
