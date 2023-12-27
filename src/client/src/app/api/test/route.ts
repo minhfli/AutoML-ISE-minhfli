@@ -1,7 +1,7 @@
 import {NextRequest, NextResponse} from "next/server";
 
 export async function GET(request: NextRequest) {
-    // console.log("request", request);
+     console.log("request", request.cookies);
     const products = {
         name: "1234",
         price: 100,
