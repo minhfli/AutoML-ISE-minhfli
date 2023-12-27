@@ -1,13 +1,23 @@
-"use client"
-import { Button } from '@/src/components/ui/button';
-import { Input } from '@/src/components/ui/input';
-import { Toaster, toast } from 'sonner';
-export default function App() {
-    return (
-        <div>
-            <Toaster />
-            <Input type="file" >
-            </Input>
-        </div>
-    );
+"use client";
+import { toast } from "sonner"
+
+import { Button } from "@/src/components/ui/button"
+
+export default function SonnerDemo() {
+  return (
+    <Button
+      variant= "destructive"
+      onClick={() =>
+        toast("Event has been created", {
+          description: new Date().toLocaleDateString(),
+          action: {
+            label: "Undo",
+            onClick: () => console.log(),
+          },
+        })
+      }
+    >
+      Show Toast
+    </Button>
+  )
 }
