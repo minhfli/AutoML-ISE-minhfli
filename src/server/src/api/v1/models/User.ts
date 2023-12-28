@@ -1,22 +1,26 @@
-import {Entity, Column, PrimaryGeneratedColumn, OneToMany} from "typeorm"
-import {Time} from "./Time";
-import {Project} from "./Project";
-import {Run} from "./Run";
+import { Entity, Column, PrimaryGeneratedColumn, OneToMany, Index } from "typeorm"
+import { Time } from "./Time";
+import { Project } from "./Project";
+import { Run } from "./Run";
 
 @Entity()
 export class User {
     @PrimaryGeneratedColumn("uuid")
-    id: number
+    id: string
 
+
+    @Index()
     @Column()
     name: string
 
+    @Index()
     @Column()
     email: string
 
     @Column()
     avatar_url: string
 
+    @Index()
     @Column()
     password: string
 
@@ -28,6 +32,7 @@ export class User {
     })
     projects: Project[]
 
-
-
+    constructor() {
+        this.projects = []
+    }
 }

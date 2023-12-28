@@ -1,4 +1,4 @@
-import {Entity, Column, PrimaryGeneratedColumn, ManyToOne, OneToMany} from "typeorm"
+import {Entity, Column, PrimaryGeneratedColumn, ManyToOne, OneToMany, Index} from "typeorm"
 import {Time} from "./Time";
 import {Task} from "./Task";
 import {User} from "./User";
@@ -9,7 +9,7 @@ import {Dataset} from "./Dataset";
 @Entity()
 export class Project {
     @PrimaryGeneratedColumn("uuid")
-    id: number
+    id: string
 
     @Column()
     name: string
@@ -17,6 +17,7 @@ export class Project {
     @Column()
     description: string
 
+    @Index()
     @Column({
         type: "enum",
         enum: Task,
@@ -44,4 +45,10 @@ export class Project {
         cascade: true
     })
     datasets: Dataset[]
+
+    constructor(){
+        this.runs = []
+        this.models = []
+        this.datasets = []
+    }
 }
