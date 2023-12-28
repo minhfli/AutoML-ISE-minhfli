@@ -2,7 +2,6 @@
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
 import * as z from "zod"
-import { Button } from "@/src/components/ui/button"
 import { Input } from "@/src/components/ui/input"
 import {
     Form,
@@ -13,6 +12,7 @@ import {
     FormLabel,
     FormMessage,
 } from "@/src/components/ui/form"
+import Link from "next/link"
 
 
 const formSchema = z.object({
@@ -24,7 +24,7 @@ const formSchema = z.object({
     })
 })
 
-export default function ProfileForm() {
+export default function RegisterForm() {
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
         defaultValues: {
@@ -44,7 +44,7 @@ export default function ProfileForm() {
                 <FormItem>
                     <FormLabel>{label}</FormLabel>
                     <FormControl>
-                        <Input type={type} autoComplete="false"  placeholder={`Enter your ${label.toLowerCase()}`} {...field} />
+                        <Input type={type} autoComplete= "off" placeholder={`Enter your ${label.toLowerCase()}`} {...field} />
                     </FormControl>
                     <FormMessage />
                 </FormItem>
@@ -55,10 +55,18 @@ export default function ProfileForm() {
         <div className="card bordered max-w-md mx-auto my-4 bg-base-100 shadow-xl">
             <div className="card-body">
                 <Form {...form}>
-                    <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-                        {renderField("username", "Username", "Username must be at least 2 characters.")}
+                    <form onSubmit={form.handleSubmit(onSubmit)} method="POST" className="space-y-4">
+                        {renderField("username", "Email address or phone number", "Please enter a valid email or phone number.")}
                         {renderField("password", "Password", "Password must be at least 8 characters.", "password")}
-                        <Button type="submit">Submit</Button>
+                        <div>
+                            <button className="btn btn-primary w-full">Log in</button>
+                        </div>
+                        <div className="text-center">
+                            <Link href="#" className="text-blue-600 hover:text-blue-800 text-sm">Forgotten password?</Link>
+                        </div>
+                        <div className="flex justify-center mt-4">
+                            <Link href = "/register" className="btn btn-success w-full">Create new account</Link>
+                        </div>
                     </form>
                 </Form>
             </div>
