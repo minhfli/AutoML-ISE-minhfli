@@ -28,7 +28,7 @@ export default function Home() {
     {
       id: 3,
       title: "Projects",
-      description: "Explore what you can do with the platform.",
+      description: "Explore what you can do with the platform with various task with NLP, Vision, Audio, Tabular and more!",
       href: "/new"
     }
     ,
@@ -70,25 +70,24 @@ export default function Home() {
       </div>
 
       <div className="mb-32 grid gap-4 text-center lg:max-w-5xl lg:w-full lg:mb-0 lg:grid-cols-4 lg:text-left lg:gap-8 justify-between">
-        {messages.map((message) => (
-          <div key={message.id}>
-            <Link
-              href={message.href}
-              prefetch={true}
-              className="group rounded-lg border border-gray-400 px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-              rel="noopener noreferrer"
-            >
-              <h2 className={`mb-3 text-2xl font-semibold`}>
-                {message.title}{' '}
-                <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-                  -&gt;
-                </span>
-              </h2>
-              <p className={`m-0 max-w-[30ch] text-sm opacity-50`}>
-                {message.description}
-              </p>
-            </Link>
-          </div>
+        {messages.map((message, index) => (
+          <Link
+            key={index || message.id} // meoew meow grrrrrrrr
+            href={message.href}
+            prefetch={true}
+            className="group rounded-lg border border-gray-400 px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
+            rel="noopener noreferrer"
+          >
+            <h2 className={`mb-3 text-2xl font-semibold`}>
+              {message.title}{' '}
+              <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
+                -&gt;
+              </span>
+            </h2>
+            <p className={`m-0 max-w-[30ch] text-sm opacity-50`}>
+              {message.description}
+            </p>
+          </Link>
 
         ))}
       </div>

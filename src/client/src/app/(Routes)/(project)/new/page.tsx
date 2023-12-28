@@ -7,6 +7,7 @@ import { useEffect, useState } from "react";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle, } from "@/src/components/ui/card";
 import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue, } from "@/src/components/ui/select";
 import { toast } from 'sonner'
+import { useRouter } from "next/navigation";
 
 type formSchemaType = {
     name: string;
@@ -28,7 +29,7 @@ async function testSubmit(form: formSchemaType) {
         // } else {
         //     setFeedback('Something went wrong.');
         // }
-    } catch (error : any) {
+    } catch (error: any) {
         toast.error(JSON.stringify(error.message));
         // setFeedback('Failed to submit. Please try again later.');
     } finally {
@@ -39,7 +40,8 @@ async function testSubmit(form: formSchemaType) {
 
 export default function Index() {
 
-    const form : formSchemaType = {
+
+    const form: formSchemaType = {
         name: '',
         task: 'Text Classification',
         modelsSearch: 'Automatic'
@@ -150,7 +152,7 @@ export default function Index() {
                             onClick={async () => {
                                 await testSubmit(form)
                                 /*
-                                    #TODO : Add validation form ? Co the ko can vi form nay don gian ?
+                                    TODO: Submit form
                                 */
                             }}
                         >Create Project</Button>
