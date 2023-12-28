@@ -20,21 +20,27 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
 
-      <body className={inter.className}>
-        <main>
-          <ThemeProvider
-            attribute="class"
-            defaultTheme="light"
-            enableSystem={true}
-            disableTransitionOnChange>
-            <div className="mode-toggle-container">
+      <body className={`${inter.className} flex flex-col h-screen`}>
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="light"
+          enableSystem={true}
+        >
+          <header className="navbar bg-base-200 border border-b-black ">
+            <div className="flex-1">
+              <a className="btn btn-ghost text-xl">Research and Development</a>
+            </div>
+            <div className="flex-none">
               <ModeToggle />
             </div>
-            {children}
-            <Toaster />
-          </ThemeProvider>
+          </header>
 
-        </main>
+          {/* Content area */}
+          <main className="flex-grow overflow-auto p-4">
+            {children}
+          </main>
+          <Toaster />
+        </ThemeProvider>
       </body>
     </html>
   )

@@ -39,6 +39,9 @@ export default function Home() {
       href: "/login"
     }
   ]
+  /*
+      #TODO: Khong code chay css nhu nay, thay = component lib
+  */
   const tempHref: string = "#";
   return (
     <main className="flex min-h-screen flex-col items-center justify-between p-24">
