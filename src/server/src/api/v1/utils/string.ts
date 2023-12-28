@@ -1,29 +1,28 @@
+import { randomBytes } from 'crypto';
+import path from 'path';
+
+
 const randomString = (length: number) => {
-    let result = ''
-    const characters = 'abcdefghijklmnopqrstuvwxyz0123456789'
-    const charactersLength = characters.length
-    for (let i = 0; i < length; i += 1) {
-        result += characters.charAt(Math.floor(Math.random() * charactersLength))
-    }
-    return result
-}
-
-const getLabelAndFilePath = (path: string) => {
-    const pathArray = path.split('/');
-
-    if (pathArray.length < 2) {
-        // Handle the case when the path is not in the expected format
-        console.error('Invalid path format:', path);
-        return { label: null, path: path };
-    }
-
-    const label = pathArray[1];
-    const filePath = pathArray.slice(1).join('/');
-    return { label, path: filePath };
+    return randomBytes(length)
+        .toString('base64')  // or 'hex'
+        .slice(0, length);  // Return the string with the desired length
 };
-
 const randomUID = () => {
     return randomString(8)
 }
+
+const getLabelAndFilePath = (inputPath: string) => {
+    const label = path.basename(path.dirname(inputPath)); // Gets the last part of the directory name
+    const filePath = path.normalize(inputPath); // Cleans up the path
+
+    if (!label || !filePath) {
+        console.error('Invalid path format:', inputPath);
+        return { label: null, path: inputPath };
+    }
+
+    return { label, path: filePath };
+};
+
+
 
 export { randomString, randomUID, getLabelAndFilePath }

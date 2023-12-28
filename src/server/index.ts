@@ -7,7 +7,7 @@ import multer from "multer";
 import morgan from "morgan";
 import routes from "./src/api/v1/routes/index"
 import {db} from "./src/api/v1/db";
-import config from "./src/config/config";
+import config from "./src/config";
 const app = express()
 
 db.initialize().then(

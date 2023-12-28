@@ -46,9 +46,5 @@ export class Project {
     })
     datasets: Dataset[]
 
-    constructor(){
-        this.runs = []
-        this.models = []
-        this.datasets = []
-    }
+   
 }
