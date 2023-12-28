@@ -4,7 +4,7 @@ import {Project} from "./Project";
 @Entity()
 export class Model {
     @PrimaryGeneratedColumn("uuid")
-    id: number
+    id: string
     @Column()
     name: string
     @Column()
@@ -14,7 +14,7 @@ export class Model {
     @Column()
     url: string
 
-    @ManyToOne(() => Project, project => project)
-    project: Project
+    @ManyToOne(() => Project, project => project.models) 
+    project: Project;
 
 }

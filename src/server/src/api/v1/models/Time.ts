@@ -10,4 +10,11 @@ export class Time {
 
     @PrimaryGeneratedColumn("uuid")
     id: number
+
+
+    constructor(){
+        this.created_at = new Date()
+        this.updated_at = new Date()
+    }
+
 }
