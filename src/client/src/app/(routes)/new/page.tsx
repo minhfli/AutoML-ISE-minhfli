@@ -2,11 +2,11 @@
 import { Button } from "@/src/components/ui/button";
 import { Input } from "@/src/components/ui/input";
 import { Label } from "@/src/components/ui/label";
-import { toast } from "sonner"
 import axios from 'axios';
 import { useEffect, useState } from "react";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle, } from "@/src/components/ui/card";
 import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue, } from "@/src/components/ui/select";
+import { toast } from 'sonner'
 
 type formSchemaType = {
     name: string;
@@ -15,51 +15,41 @@ type formSchemaType = {
 };
 
 
-/*
-    TODO: Use toast to show feedback instead of just console.log() :v
-*/
-
-async function testSubmit(form: formSchemaType, setSubmitting: (status: boolean) => void, setFeedback: (message: string) => void) {
-    setSubmitting(true);
+async function testSubmit(form: formSchemaType) {
     try {
         const res = await axios.post('/api/test', form);
-        if (res.status === 200) {
-            setFeedback('Project created successfully.');
-        } else {
-            setFeedback('Something went wrong.');
-        }
-    } catch (error) {
 
-        setFeedback('Failed to submit. Please try again later.');
+        toast.success(JSON.stringify(form.name));
+        toast.success(JSON.stringify(form.task));
+        toast.success(JSON.stringify(form.modelsSearch));
+
+        // if (res.status === 200) {
+        //     setFeedback('Project created successfully.');
+        // } else {
+        //     setFeedback('Something went wrong.');
+        // }
+    } catch (error : any) {
+        toast.error(JSON.stringify(error.message));
+        // setFeedback('Failed to submit. Please try again later.');
     } finally {
-
-        setSubmitting(false);
+        // setSubmitting(false);
     }
 }
 
 
 export default function Index() {
 
-    const [form, setForm] = useState<formSchemaType>({
-        name: "",
-        task: "Text Classification",
-        modelsSearch: "Automatic",
-    });
+    const form : formSchemaType = {
+        name: '',
+        task: 'Text Classification',
+        modelsSearch: 'Automatic'
+    };
 
     const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        event.persist(); // Chong react pool event
-        setForm({ ...form, [event.target.id]: event.target.value });
+        event.preventDefault();
         form.name = event.target.value; // ko hieu sao lai bug nen danh phai lam nhu nay
     };
-    const [submitting, setSubmitting] = useState<boolean>(false);
 
-    const [feedback, setFeedback] = useState<string>('');
-
-    useEffect(() => {
-        return () => {
-            window.removeEventListener("beforeunload", () => { });
-        }
-    }, [submitting, feedback]);
 
 
 
@@ -158,26 +148,10 @@ export default function Index() {
                         <Button variant="outline">Cancel</Button>
                         <Button
                             onClick={async () => {
-                                await testSubmit(form, setSubmitting, setFeedback)
-
-                                if (feedback !== '') {
-                                    toast("Project has been created", {
-                                        description: new Date().toLocaleDateString(),
-                                        action: {
-                                            label: "Undo",
-                                            onClick: () => console.log(),
-                                        },
-                                    })
-                                }
-                                else {
-                                    toast("Failed to submit. Please try again later.", {
-                                        description: new Date().toLocaleDateString(),
-                                        action: {
-                                            label: "Undo",
-                                            onClick: () => console.log(),
-                                        },
-                                    })
-                                }
+                                await testSubmit(form)
+                                /*
+                                    #TODO : Add validation form ? Co the ko can vi form nay don gian ?
+                                */
                             }}
                         >Create Project</Button>
                     </CardFooter>

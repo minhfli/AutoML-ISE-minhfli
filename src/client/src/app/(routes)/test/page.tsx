@@ -1,23 +1,34 @@
 "use client";
-import { toast } from "sonner"
+import { useRouter } from "next/navigation";
+import { RandomAuth } from "./auth";
 
-import { Button } from "@/src/components/ui/button"
+export default function Index() {
+  const router = useRouter();
 
-export default function SonnerDemo() {
-  return (
-    <Button
-      variant= "destructive"
-      onClick={() =>
-        toast("Event has been created", {
-          description: new Date().toLocaleDateString(),
-          action: {
-            label: "Undo",
-            onClick: () => console.log(),
-          },
-        })
+  const handleSubmit = async (e : any) => {
+    e.preventDefault();
+    const formData = new FormData(e.target);
+    const username = formData.get('username') as string;
+    const password = formData.get('password') as string;
+
+    try {
+      const res = await RandomAuth({ username, password });
+      if (res) {
+          router.push('/new');
       }
-    >
-      Show Toast
-    </Button>
-  )
+    } catch (error) {
+      console.error(error);
+      router.push('/');
+    }
+  };
+
+  return (
+    <>
+      <form onSubmit={handleSubmit} method="POST">
+        <input type="text" name="username" placeholder="Enter your username" />
+        <input type="password" name="password" placeholder="Enter your password" />
+        <button type="submit">Submit</button>
+      </form>
+    </>
+  );
 }
