@@ -5,7 +5,7 @@ import { cn } from "@/lib/utils"
 
 
 const Card = React.forwardRef<
-  HTMLDivElement,
+HTMLDivElement,
   React.HTMLAttributes<HTMLDivElement>
 >(({ className, ...props }, ref) => (
   <div

@@ -1,6 +1,6 @@
 import {DataSource} from "typeorm"
 import * as schema from "../models"
-import config from "../../../config/config";
+import config from "../../../config"
 
 
 export const db = new DataSource({
