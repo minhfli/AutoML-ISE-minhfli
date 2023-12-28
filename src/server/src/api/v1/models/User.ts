@@ -32,7 +32,5 @@ export class User {
     })
     projects: Project[]
 
-    constructor() {
-        this.projects = []
-    }
+    
 }
