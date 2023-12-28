@@ -4,7 +4,9 @@ import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
 import { Toaster } from "@/src/components/ui/sonner"
 import './globals.css';
-
+import { Avatar, AvatarFallback, AvatarImage } from "@/src/components/ui/avatar"
+import logo from '@/public/logo.png';
+import Link from "next/link";
 const inter = Inter({ subsets: ['latin'] })
 
 export const metadata: Metadata = {
@@ -28,10 +30,18 @@ export default function RootLayout({
         >
           <header className="navbar bg-base-200 border border-b-black ">
             <div className="flex-1">
-              <a className="btn btn-ghost text-xl">Research and Development</a>
+              <Link className="btn btn-ghost text-xl" href="/">Research and Development</Link>
             </div>
-            <div className="flex-none">
-              <ModeToggle />
+            <div className="flex justify-between">
+              <div className="flex-none">
+                <ModeToggle />
+              </div>
+              <div className="flex-none">
+                <Avatar>
+                  <AvatarImage src={logo.src as string} />
+                  <AvatarFallback>Meow</AvatarFallback>
+                </Avatar>
+              </div>
             </div>
           </header>
 
@@ -39,7 +49,7 @@ export default function RootLayout({
           <main className="flex-grow overflow-auto p-4">
             {children}
           </main>
-          <Toaster />
+          <Toaster richColors expand={false} />
         </ThemeProvider>
       </body>
     </html>
