@@ -5,10 +5,14 @@ import cors from 'cors'
 import helmet from 'helmet'
 import multer from "multer";
 import morgan from "morgan";
-import routes from "./src/api/v1/routes/index"
-import {db} from "./src/api/v1/db";
+
+import {db, GCPStorage} from "./src/api/v1/db";
 import config from "./src/config";
+import routeV1 from "./src/api/v1/routes/v1";
+
 const app = express()
+
+const apiPrefix = '/api/v1'
 
 db.initialize().then(
     () => {
@@ -18,20 +22,16 @@ db.initialize().then(
     console.log("Error initializing database", err);
 });
 
-// allow front end to access
+
 app.use(cors(
     {
-        origin: `http://localhost:${config.frontendURL}`,
+        origin: config.frontendURL,
         credentials: true
     }
 ))
-app.use(function (req, res, next) {
-    res.header("Access-Control-Allow-Origin", `http://localhost:${config.frontendURL}`); // update to match the domain you will make the request from
-    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, Authorization, x-access-token");
-    res.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
-    res.header("Access-Control-Allow-Credentials", "true");
-    next();
-});
+
+
+app.use(express.json())
 
 app.use(helmet())
 app.use(cookieParser())
@@ -39,20 +39,15 @@ app.use(bodyParser.json({limit: '100mb'}))
 app.use(bodyParser.urlencoded({extended: true, limit: '100mb'}))
 app.use(multer().array('files'))
 app.use(morgan('tiny'))
-app.use(routes)
 
 
 app.use(express.static('public'))
-app.use((err: { status: any; message: any }, req: any, res: {
-    json: (arg0: { status: any; message: any }) => void
-}, next: any) => {
-    res.json({
-        status: err.status || 500,
-        message: err.message,
-    })
+
+
+app.use(apiPrefix, routeV1)
+
+app.listen(config.port, () => {
+    console.log("Server is running on port " + config.port);
 })
 
-app.post('/', (req, res) => {
-    res.send('Hello World!');
-    res.status(200);
-})
+
