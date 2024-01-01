@@ -10,18 +10,26 @@ export class User {
 
 
     @Index()
-    @Column()
+    @Column({
+        nullable: true
+    })
     name: string
 
     @Index()
-    @Column()
+    @Column({
+        nullable: true
+    })
     email: string
 
-    @Column()
+    @Column({
+        nullable: true
+    })
     avatar_url: string
 
     @Index()
-    @Column()
+    @Column({
+        nullable: true
+    })
     password: string
 
     @Column(() => Time)

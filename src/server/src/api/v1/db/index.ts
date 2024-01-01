@@ -6,7 +6,6 @@ import config from "../../../config"
 export const db = new DataSource({
     type: "postgres",
     host: "localhost",
-    port: 5432,
     url: config.postgresURL,
     database: "test",
     entities: [schema.User, schema.Project, schema.Run, schema.Model, schema.Dataset],
@@ -15,3 +14,8 @@ export const db = new DataSource({
     cache: true,
     logger: "advanced-console"
 })
+
+export const GCPStorage = {
+    keyFilename: config.gcpCredentials,
+    projectId: "automl-platform",
+};
