@@ -8,12 +8,15 @@ const postgresURL = process.env.POSTGRES_URL || "postgres://postgres:postgres@lo
 const frontendURL = process.env.FRONTEND_URL || "http://localhost:3001";
 const mlURL = process.env.ML_URL || "http://localhost:3333"
 const gcpCredentials = process.env.GCP_CREDENTIALS || "service-account-gcs.json"
+const accessTokenRequest = process.env.ACCESS_TOKEN_SECRET || ""
+
 const config = {
     port,
     mongoURL,
     postgresURL,
     frontendURL,
     mlURL,
-    gcpCredentials
+    gcpCredentials,
+    accessTokenRequest,
 };
 export default config
