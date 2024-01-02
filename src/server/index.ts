@@ -49,5 +49,3 @@ app.use(apiPrefix, routeV1)
 app.listen(config.port, () => {
     console.log("Server is running on port " + config.port);
 })
-
-
