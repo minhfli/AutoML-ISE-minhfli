@@ -1,12 +1,11 @@
 "use client";
 import React from "react";
 import Link from "next/link";
-
 const NewProjectCard: React.FC = () => {
   return (
     <Link
       href="/project/new"
-      className="mx-auto w-full overflow-hidden rounded-lg border border-gray-200 bg-white shadow-md hover:bg-gray-50"
+      className="mx-auto w-full rounded-lg border border-gray-200 bg-white shadow-md hover:bg-gray-50"
     >
       <div className="flex h-full items-center justify-center p-4">
         <div className="flex items-center justify-center space-x-2">
@@ -58,7 +57,7 @@ const ProjectCard: React.FC<ProjectCardProps> = ({
   const statusColor = statusClasses[status];
 
   return (
-    <div className="mx-auto w-full overflow-hidden rounded-lg border border-gray-200 bg-white text-center shadow-md">
+    <div className="mx-auto w-full rounded-lg border border-gray-200 bg-white text-center shadow-md hover:bg-gray-50">
       <div className="p-5">
         <h5 className="text-lg font-bold tracking-tight text-gray-900">
           {title}
@@ -93,17 +92,19 @@ type ProjectsGridProps = {
 // Define the ProjectsGrid component
 const ProjectsGrid: React.FC<ProjectsGridProps> = ({ projects }) => {
   return (
-    <div className="grid grid-cols-1 justify-items-center gap-4 md:grid-cols-2 lg:grid-cols-3">
-      <NewProjectCard />
-      {projects.map((project) => (
-        <ProjectCard
-          key={project.id}
-          title={project.title}
-          status={project.status}
-          description={project.description}
-          dateUpdated={project.dateUpdated}
-        />
-      ))}
+    <div className="h-full overflow-y-auto px-4 py-4">
+      <div className="grid grid-cols-1 justify-items-center gap-4 md:grid-cols-2 lg:grid-cols-3">
+        <NewProjectCard />
+        {projects.map((project) => (
+          <ProjectCard
+            key={project.id}
+            title={project.title}
+            status={project.status}
+            description={project.description}
+            dateUpdated={project.dateUpdated}
+          />
+        ))}
+      </div>
     </div>
   );
 };
@@ -150,7 +151,9 @@ const App: React.FC = () => {
     // ... array of projects with id, title, status, and dateUpdated
   ];
 
-  return <ProjectsGrid projects={projectsData} />;
+  return (
+  <ProjectsGrid projects={projectsData} />
+  )
 };
 
 export default App;
