@@ -13,6 +13,7 @@ import {
     FormMessage,
 } from "@/src/components/ui/form"
 import Link from "next/link"
+import { toast } from "sonner"
 
 
 const formSchema = z.object({
@@ -34,7 +35,7 @@ export default function ProfileForm() {
     })
 
     function onSubmit(values: z.infer<typeof formSchema>) {
-        console.log(values)
+        toast.success("Login successful!")
     }
     const renderField = (name: "username" | "password", label: string, description: string, type = 'text') => (
         <FormField

@@ -25,11 +25,9 @@ const createUser = async (req: UserRequest): Promise<Boolean> => {
 
 const findByEmail = async (email: string): Promise<User | null> => {
     try {
-        const user = new User();
-        user.email = email;
         return await db.getRepository(User).findOne({
             where: {
-                email: user.email
+                email: email
             }
         });
     } catch (error: any) {
@@ -37,8 +35,24 @@ const findByEmail = async (email: string): Promise<User | null> => {
         return null;
     }
 }
+
+const findByUsername = async (username: string): Promise<User | null> => {
+    try {
+        return await db.getRepository(User).findOne({
+            where: {
+                name : username
+            }
+        });
+    } catch (error: any) {
+        console.error(error);
+        return null;
+    }
+}
+
+
 export const UserServices = {
     createUser,
-    findByEmail
+    findByEmail, 
+    findByUsername
 }
 

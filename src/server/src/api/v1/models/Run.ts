@@ -1,11 +1,16 @@
-import {Entity, PrimaryGeneratedColumn, Column, ManyToOne} from "typeorm"
+import {Entity, PrimaryGeneratedColumn, Column, ManyToOne, PrimaryColumn, OneToOne, JoinColumn} from "typeorm"
 import {User} from "./User";
 import {Project} from "./Project";
+import { ulid } from "ulid";
+import { Model } from './Model';
 
 @Entity()
 export class Run {
-    @PrimaryGeneratedColumn()
-    id: number
+    @PrimaryColumn({
+        type: 'varchar',
+        default: () => `'${ulid()}'`
+    })
+    id: string;
 
     @Column()
     name: string
@@ -30,4 +35,8 @@ export class Run {
 
     @ManyToOne(() => Project, project => project.runs)
     project: Project
+
+    @OneToOne(() => Model, (model) => model.run, {cascade: true, eager: true, onDelete: 'CASCADE'})
+    @JoinColumn()
+    model: Model
 }

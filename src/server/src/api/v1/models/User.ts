@@ -1,12 +1,16 @@
-import { Entity, Column, PrimaryGeneratedColumn, OneToMany, Index } from "typeorm"
+import { Entity, Column, PrimaryGeneratedColumn, OneToMany, Index, PrimaryColumn } from "typeorm"
 import { Time } from "./Time";
 import { Project } from "./Project";
 import { Run } from "./Run";
+import { ulid } from "ulid";
 
 @Entity()
 export class User {
-    @PrimaryGeneratedColumn("uuid")
-    id: string
+    @PrimaryColumn({
+        type: 'varchar',
+        default: () => `'${ulid()}'`
+    })
+    id: string;
 
 
     @Index()
@@ -17,6 +21,7 @@ export class User {
 
     @Index()
     @Column({
+        unique : true,
         nullable: true
     })
     email: string
@@ -32,8 +37,6 @@ export class User {
     })
     password: string
 
-    @Column(() => Time)
-    time: Time
 
     @OneToMany(() => Project, project => project.user, {
         cascade: true
