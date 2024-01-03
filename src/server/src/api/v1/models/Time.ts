@@ -1,4 +1,5 @@
-import {Entity, PrimaryGeneratedColumn, CreateDateColumn, UpdateDateColumn} from "typeorm"
+import {Entity, PrimaryGeneratedColumn, CreateDateColumn, UpdateDateColumn, PrimaryColumn} from "typeorm"
+import { ulid } from "ulid";
 
 @Entity()
 export class Time {
@@ -8,8 +9,12 @@ export class Time {
     @UpdateDateColumn({default: () => "CURRENT_TIMESTAMP", onUpdate: "CURRENT_TIMESTAMP"})
     updated_at: Date
 
-    @PrimaryGeneratedColumn("uuid")
-    id: number
+    @PrimaryColumn({
+        type: 'varchar',
+        default: () => `'${ulid()}'`
+    })
+    id: string;
+
 
 
 }
