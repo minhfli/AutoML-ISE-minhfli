@@ -11,7 +11,7 @@
 /src/mlservice/image_classifier/ag_automm_tutorial_imgcls
 /src/mlservice/image_classifier/test.py
 /src/mlservice/image_classifier/datasets/flowers
-/src/mlservice/object_detection/test.py
+/src/mlservice/app/image_classifier/test.py
 
 # client
 # See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
