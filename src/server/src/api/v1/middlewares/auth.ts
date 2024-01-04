@@ -14,6 +14,7 @@ export type TokenPayLoad = {
 
 const isAuth = async (req: AuthenticatedRequest, res: Response, next: NextFunction) => {
     const { accessToken } = req.cookies;
+    // console.log("accessToken here " + accessToken);
     if (accessToken) {
         try {
             const decoded = await verifyToken(accessToken, config.accessTokenRequest);

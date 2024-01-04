@@ -2,14 +2,10 @@ import { Entity, Column, PrimaryGeneratedColumn, OneToMany, Index, PrimaryColumn
 import { Time } from "./Time";
 import { Project } from "./Project";
 import { Run } from "./Run";
-import { ulid } from "ulid";
 
 @Entity()
 export class User {
-    @PrimaryColumn({
-        type: 'varchar',
-        default: () => `'${ulid()}'`
-    })
+    @PrimaryGeneratedColumn("identity")
     id: string;
 
 
@@ -43,5 +39,4 @@ export class User {
     })
     projects: Project[]
 
-    
 }
