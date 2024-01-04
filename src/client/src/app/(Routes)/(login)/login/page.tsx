@@ -16,7 +16,7 @@ import Link from "next/link"
 import { toast } from "sonner"
 import axios from "axios"
 import { useRouter } from "next/navigation"
-
+import { setCookie, getCookie } from 'cookies-next';
 
 const formSchema = z.object({
     email: z.string().min(2, {
@@ -38,6 +38,16 @@ export default function ProfileForm() {
 
     const router = useRouter();
 
+    const writeCookies = ({ accessToken }: { accessToken: string }) => {
+        const cookieOptions = {
+            path: '/',
+            secure: true,
+            sameSite: 'none' as const,
+        };
+        setCookie('accessToken', accessToken, cookieOptions);
+        console.log("Cookie: " + getCookie('accessToken', cookieOptions));
+    };
+
     async function onSubmit(values: z.infer<typeof formSchema>) {
         try {
             console.log(values.password);
@@ -48,6 +58,9 @@ export default function ProfileForm() {
 
             if (result.status >= 200 && result.status < 300) {
                 toast.success("Login successful!");
+                writeCookies({
+                    accessToken: result.data.access_token
+                });
                 router.push('/project');
             } else {
                 toast.error("Login failed! Check your form");
@@ -66,7 +79,7 @@ export default function ProfileForm() {
                 <FormItem>
                     <FormLabel>{label}</FormLabel>
                     <FormControl>
-                        <Input type={type} autoComplete= "off" placeholder={`Enter your ${label.toLowerCase()}`} {...field} />
+                        <Input type={type} autoComplete="off" placeholder={`Enter your ${label.toLowerCase()}`} {...field} />
                     </FormControl>
                     <FormMessage />
                 </FormItem>
@@ -87,7 +100,7 @@ export default function ProfileForm() {
                             <Link href="#" className="text-blue-600 hover:text-blue-800 text-sm">Forgotten password?</Link>
                         </div>
                         <div className="flex justify-center mt-4">
-                            <Link href = "/register" className="btn btn-success w-full">Create new account</Link>
+                            <Link href="/register" className="btn btn-success w-full">Create new account</Link>
                         </div>
                     </form>
                 </Form>
