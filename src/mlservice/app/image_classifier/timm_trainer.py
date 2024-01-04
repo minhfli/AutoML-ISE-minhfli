@@ -13,7 +13,7 @@ import timm
 import torch.optim as optim
 import _pickle as cPickle
 
-from src.mlservice.image_classifier.data.process_image import split_imagefolder
+from image_classifier.data.process_image import split_imagefolder
 
 
 def set_seed(seed=None):
