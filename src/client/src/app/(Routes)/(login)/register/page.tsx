@@ -14,7 +14,7 @@ import {
 } from "@/src/components/ui/form"
 import { toast } from "sonner"
 import axios from "axios"
-
+import { useRouter } from "next/navigation"
 
 
 const formSchema = z.object({
@@ -35,6 +35,8 @@ const formSchema = z.object({
 });
 
 export default function RegisterForm() {
+    const router = useRouter();
+
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
         defaultValues: {
@@ -53,6 +55,7 @@ export default function RegisterForm() {
         })
         if (result.status >= 200 && result.status < 300) {
             toast.success("Register successful!");
+            router.push('/login');
         } else {
             toast.error("Register failed! Check your form");
         }
@@ -91,5 +94,3 @@ export default function RegisterForm() {
 
     )
 }
-
-

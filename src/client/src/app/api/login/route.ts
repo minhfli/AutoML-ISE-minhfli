@@ -2,15 +2,14 @@ import {NextRequest, NextResponse} from 'next/server';
 import axios from "axios";
 import config from '@/config/config';
 
-
 export async function POST(req: NextRequest) {
     try {
         const body = await req.json();
 
         console.log(body);
         // Gửi request lên server
-        const response = await axios.post(`${config.backendURL}/auth/register`, body);
-        if (response.status === 201) {
+        const response = await axios.post(`${config.backendURL}/auth/login`, body);
+        if (response.status === 200) {
             return new NextResponse(JSON.stringify(response.data), {
                 status: 200,
                 headers: {
@@ -18,6 +17,7 @@ export async function POST(req: NextRequest) {
                 }
             });
         }
+
         return new NextResponse(JSON.stringify({error: response.data}), {
             status: 400,
             headers: {
