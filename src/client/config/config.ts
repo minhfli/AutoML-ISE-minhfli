@@ -2,8 +2,8 @@ import dotenv from 'dotenv';
 dotenv.config();
 
 
-const port = process.env.PORT 
+const backendURL = process.env.BACKEND_URL
 const config = {
-    port
+    backendURL
 }
 export default config;

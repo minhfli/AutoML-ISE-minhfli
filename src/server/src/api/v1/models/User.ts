@@ -1,36 +1,42 @@
-import { Entity, Column, PrimaryGeneratedColumn, OneToMany, Index } from "typeorm"
+import { Entity, Column, PrimaryGeneratedColumn, OneToMany, Index, PrimaryColumn } from "typeorm"
 import { Time } from "./Time";
 import { Project } from "./Project";
 import { Run } from "./Run";
 
 @Entity()
 export class User {
-    @PrimaryGeneratedColumn("uuid")
-    id: string
+    @PrimaryGeneratedColumn("identity")
+    id: string;
 
 
     @Index()
-    @Column()
+    @Column({
+        nullable: true
+    })
     name: string
 
     @Index()
-    @Column()
+    @Column({
+        unique : true,
+        nullable: true
+    })
     email: string
 
-    @Column()
+    @Column({
+        nullable: true
+    })
     avatar_url: string
 
     @Index()
-    @Column()
+    @Column({
+        nullable: true
+    })
     password: string
 
-    @Column(() => Time)
-    time: Time
 
     @OneToMany(() => Project, project => project.user, {
         cascade: true
     })
     projects: Project[]
 
-    
 }

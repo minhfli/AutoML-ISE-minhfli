@@ -7,7 +7,7 @@ import { useEffect, useState } from "react";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle, } from "@/src/components/ui/card";
 import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue, } from "@/src/components/ui/select";
 import { toast } from 'sonner'
-import { useRouter } from "next/navigation";
+
 
 type formSchemaType = {
     name: string;
@@ -67,7 +67,7 @@ export default function Index() {
 
     return (
         <>
-            <div className="flex justify-center items-center">
+            <div className="card flex justify-center items-center">
                 <Card className="w-1/3 border-gray-400">
 
                     <CardHeader className="overflow-auto">

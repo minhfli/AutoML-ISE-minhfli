@@ -12,31 +12,55 @@ import {
     FormLabel,
     FormMessage,
 } from "@/src/components/ui/form"
-import Link from "next/link"
+import { toast } from "sonner"
+import axios from "axios"
+import { useRouter } from "next/navigation"
 
 
 const formSchema = z.object({
+    email: z.string().email({ message: "Invalid email address" }),
+
     username: z.string().min(2, {
         message: "Username must be at least 2 characters.",
     }),
     password: z.string().min(8, {
         message: "Password must be at least 8 characters.",
-    })
-})
+    }),
+    repeatPassword: z.string().min(8, {
+        message: "Repeat password must match.",
+    }),
+}).refine(data => data.password === data.repeatPassword, {
+    message: "Password must be matched.",
+    path: ["repeatPassword"],
+});
 
 export default function RegisterForm() {
+    const router = useRouter();
+
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
         defaultValues: {
+            email: "",
             username: "",
             password: "",
+            repeatPassword: ""
         },
     })
 
-    function onSubmit(values: z.infer<typeof formSchema>) {
-        console.log(values)
+    async function onSubmit(values: z.infer<typeof formSchema>) {
+        const result = await axios.post("/api/register", {
+            email: values.email,
+            username: values.username,
+            password: values.password,
+        })
+        if (result.status >= 200 && result.status < 300) {
+            toast.success("Register successful!");
+            router.push('/login');
+        } else {
+            toast.error("Register failed! Check your form");
+        }
     }
-    const renderField = (name: "username" | "password", label: string, description: string, type = 'text') => (
+    const renderField = (name: "username" | "password" | "repeatPassword" | "email", label: string, description: string, type = 'text') => (
         <FormField
             control={form.control}
             name={name}
@@ -44,9 +68,9 @@ export default function RegisterForm() {
                 <FormItem>
                     <FormLabel>{label}</FormLabel>
                     <FormControl>
-                        <Input type={type} autoComplete= "off" placeholder={`Enter your ${label.toLowerCase()}`} {...field} />
+                        <Input type={type} autoComplete="off" placeholder={`Enter your ${label.toLowerCase()}`} {...field} />
                     </FormControl>
-                    <FormMessage />
+                    <FormMessage>{form.formState.errors[name]?.message}</FormMessage>
                 </FormItem>
             )}
         />
@@ -56,16 +80,12 @@ export default function RegisterForm() {
             <div className="card-body">
                 <Form {...form}>
                     <form onSubmit={form.handleSubmit(onSubmit)} method="POST" className="space-y-4">
-                        {renderField("username", "Email address or phone number", "Please enter a valid email or phone number.")}
+                        {renderField("email", "Enter your email", "Please enter a valid email or phone number.")}
+                        {renderField("username", "Enter your username", "Username must be at least 2 characters.")}
                         {renderField("password", "Password", "Password must be at least 8 characters.", "password")}
+                        {renderField("repeatPassword", "Repeat Password", "Repeat password must match.", "password")}
                         <div>
-                            <button className="btn btn-primary w-full">Log in</button>
-                        </div>
-                        <div className="text-center">
-                            <Link href="#" className="text-blue-600 hover:text-blue-800 text-sm">Forgotten password?</Link>
-                        </div>
-                        <div className="flex justify-center mt-4">
-                            <Link href = "/register" className="btn btn-success w-full">Create new account</Link>
+                            <button className="btn btn-primary w-full">Register</button>
                         </div>
                     </form>
                 </Form>
@@ -74,5 +94,3 @@ export default function RegisterForm() {
 
     )
 }
-
-

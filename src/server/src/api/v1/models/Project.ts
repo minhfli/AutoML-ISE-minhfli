@@ -1,15 +1,20 @@
-import {Entity, Column, PrimaryGeneratedColumn, ManyToOne, OneToMany, Index} from "typeorm"
+import {Entity, Column, PrimaryGeneratedColumn, ManyToOne, OneToMany, Index, PrimaryColumn} from "typeorm"
 import {Time} from "./Time";
 import {Task} from "./Task";
 import {User} from "./User";
 import {Run} from "./Run";
 import {Model} from "./Model";
 import {Dataset} from "./Dataset";
+import { ulid } from "ulid";
 
 @Entity()
 export class Project {
-    @PrimaryGeneratedColumn("uuid")
-    id: string
+    @PrimaryColumn({
+        type: 'varchar',
+        default: () => `'${ulid()}'`
+    })
+    id: string;
+
 
     @Column()
     name: string
@@ -36,10 +41,6 @@ export class Project {
     })
     runs: Run[]
 
-    @OneToMany(() => Model, model => model.project, {
-        cascade: true
-    })
-    models: Model[]
 
     @OneToMany(() => Dataset, dataset => dataset.project, {
         cascade: true

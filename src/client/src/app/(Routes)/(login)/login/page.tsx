@@ -13,11 +13,14 @@ import {
     FormMessage,
 } from "@/src/components/ui/form"
 import Link from "next/link"
-
+import { toast } from "sonner"
+import axios from "axios"
+import { useRouter } from "next/navigation"
+import { setCookie, getCookie } from 'cookies-next';
 
 const formSchema = z.object({
-    username: z.string().min(2, {
-        message: "Username must be at least 2 characters.",
+    email: z.string().min(2, {
+        message: "Email must be at least 2 characters.",
     }),
     password: z.string().min(8, {
         message: "Password must be at least 8 characters.",
@@ -28,15 +31,47 @@ export default function ProfileForm() {
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
         defaultValues: {
-            username: "",
+            email: "",
             password: "",
         },
     })
 
-    function onSubmit(values: z.infer<typeof formSchema>) {
-        console.log(values)
+    const router = useRouter();
+
+    const writeCookies = ({ accessToken }: { accessToken: string }) => {
+        const cookieOptions = {
+            path: '/',
+            secure: true,
+            sameSite: 'none' as const,
+        };
+        setCookie('accessToken', accessToken, cookieOptions);
+        console.log("Cookie: " + getCookie('accessToken', cookieOptions));
+    };
+
+    async function onSubmit(values: z.infer<typeof formSchema>) {
+        try {
+            console.log(values.password);
+            const result = await axios.post("/api/login", {
+                email: values.email,
+                password: values.password,
+            });
+
+            if (result.status >= 200 && result.status < 300) {
+                toast.success("Login successful!");
+                writeCookies({
+                    accessToken: result.data.access_token
+                });
+                router.push('/project');
+            } else {
+                toast.error("Login failed! Check your form");
+            }
+        } catch (error) {
+            console.error("Error during login:", error);
+            toast.error("Login failed. Please try again.");
+        }
     }
-    const renderField = (name: "username" | "password", label: string, description: string, type = 'text') => (
+
+    const renderField = (name: "email" | "password", label: string, description: string, type = 'text') => (
         <FormField
             control={form.control}
             name={name}
@@ -44,7 +79,7 @@ export default function ProfileForm() {
                 <FormItem>
                     <FormLabel>{label}</FormLabel>
                     <FormControl>
-                        <Input type={type} autoComplete= "off" placeholder={`Enter your ${label.toLowerCase()}`} {...field} />
+                        <Input type={type} autoComplete="off" placeholder={`Enter your ${label.toLowerCase()}`} {...field} />
                     </FormControl>
                     <FormMessage />
                 </FormItem>
@@ -56,7 +91,7 @@ export default function ProfileForm() {
             <div className="card-body">
                 <Form {...form}>
                     <form onSubmit={form.handleSubmit(onSubmit)} method="POST" className="space-y-4">
-                        {renderField("username", "Email address or phone number", "Please enter a valid email or phone number.")}
+                        {renderField("email", "Email address or phone number", "Please enter a valid email or phone number.")}
                         {renderField("password", "Password", "Password must be at least 8 characters.", "password")}
                         <div>
                             <button className="btn btn-primary w-full">Log in</button>
@@ -65,7 +100,7 @@ export default function ProfileForm() {
                             <Link href="#" className="text-blue-600 hover:text-blue-800 text-sm">Forgotten password?</Link>
                         </div>
                         <div className="flex justify-center mt-4">
-                            <Link href = "/register" className="btn btn-success w-full">Create new account</Link>
+                            <Link href="/register" className="btn btn-success w-full">Create new account</Link>
                         </div>
                     </form>
                 </Form>
@@ -74,5 +109,3 @@ export default function ProfileForm() {
 
     )
 }
-
-
