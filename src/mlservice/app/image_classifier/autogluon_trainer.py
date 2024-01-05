@@ -21,7 +21,7 @@ def train(dataset_name):
     train_df, valid_df, test_df = split_imagefolder(os.path.join(dataset_directory, dataset_name),
                                                     datasplits_directory)
 
-    model_path = f"./trained_models/{datetime.datetime.now().strftime('%y%m%s%H%M%S')}-automm_{dataset_name}"
+    model_path = f"./image_classifier/trained_models/{datetime.datetime.now().strftime('%y%m%s%H%M%S')}-automm_{dataset_name}"
     predictor = MultiModalPredictor(label="label", path=model_path)
     predictor.fit(train_data=train_df, tuning_data=valid_df, time_limit=30,
                 hyperparameters={
