@@ -3,7 +3,7 @@ from image_classifier.data.process_image import split_imagefolder
 import datetime
 import os
 import shutil
-from src.mlservice.app.gcp.fetch_data import download_folder
+from gcp.fetch_data import download_folder
 
 
 def train(dataset_name):
