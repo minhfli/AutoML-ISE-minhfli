@@ -1,34 +1,55 @@
+from pathlib import Path
+
 from autogluon.multimodal import MultiModalPredictor
-from image_classifier.data.process_image import split_imagefolder
-import datetime
-import os
-import shutil
-from gcp.fetch_data import download_folder
+from typing import Optional, Union
+
+import asyncio
 
 
-def train(dataset_name):
-    dataset_directory = "./image_classifier/datasets/" # hardcoded
-    datasplits_directory = os.path.join(dataset_directory, "datasplits")
-    if not os.path.exists(os.path.join(dataset_directory, dataset_name)):
-        print("Fetching dataset from GCP")
-        try:
-            download_folder("automl_imagebucket", dataset_name, dataset_directory)
-        except FileNotFoundError as e:
-            raise Exception("Dataset does not exist!")
-    print("Splitting train, validate, test sets...")
-    if os.path.exists(datasplits_directory):
-        shutil.rmtree(datasplits_directory)
-    train_df, valid_df, test_df = split_imagefolder(os.path.join(dataset_directory, dataset_name),
-                                                    datasplits_directory)
+def train(train_data_path: Path, val_data_path: Path, model_path: Path,
+          time_expected: int) -> Union[MultiModalPredictor, None]:
+    try:
+        predictor = MultiModalPredictor(label="label", path=str(model_path))
+        predictor.fit(str(train_data_path), str(val_data_path),
+                      time_limit=time_expected,
+                      save_path=str(model_path),
+                      hyperparameters={
+                          "env.precision": "bf16-mixed",
+                          "env.compile.turn_on": True,
+                          "env.compile.mode": "reduce-overhead"
+                      }
+                      )
+        print("Training completed successfully.")
+        return predictor
+    except ValueError as ve:
+        print(f"Value Error: {ve}")
+        # Handle specific ValueError which might occur due to wrong parameter values, etc.
+    except FileNotFoundError as fnfe:
+        print(f"File Not Found Error: {fnfe}")
+        # Handle FileNotFoundError which might occur if the dataset paths are incorrect.
+    except Exception as e:
+        print(f"An unexpected error occurred: {e}")
+        # Handle any other unexpected exceptions.
+        # It's often a good idea to log the exception details here for later debugging.
+    return None
 
-    model_path = f"./image_classifier/trained_models/{datetime.datetime.now().strftime('%y%m%s%H%M%S')}-automm_{dataset_name}"
-    predictor = MultiModalPredictor(label="label", path=model_path)
-    predictor.fit(train_data=train_df, tuning_data=valid_df, time_limit=30,
-                hyperparameters={
-                    "env.per_gpu_batch_size": 4,
-                    "env.batch_size": 4
-                })
 
-    score = predictor.evaluate(test_df, metrics=['accuracy'])
+async def train_async(train_data_path: Path, val_data_path: Path, model_path: Path,
+                      time_expected: int) -> Union[MultiModalPredictor, None]:
+    return await asyncio.to_thread(train, train_data_path, val_data_path, model_path, time_expected)
 
-    print('Top 1 test-acc: %.3f' % score["accuracy"])
+
+def evaluate(predictor: MultiModalPredictor, test_data_path: Path) -> Optional[float]:
+    try:
+        test_acc = predictor.evaluate(str(test_data_path), metrics="accuracy")
+        print(f"Test accuracy: {test_acc}")
+        return test_acc
+    except Exception as e:
+        print(f"An unexpected error occurred: {e}")
+        # Handle any other unexpected exceptions.
+        # It's often a good idea to log the exception details here for later debugging.
+    return None
+
+
+async def evaluate_async(predictor: MultiModalPredictor, test_data_path: Path) -> Optional[float]:
+    return await asyncio.to_thread(evaluate, predictor, test_data_path)
