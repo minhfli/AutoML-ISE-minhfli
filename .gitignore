@@ -58,3 +58,4 @@ node_modules
 *.iml
 .idea
 .idea/*
+src/mlservice/service-account-gcs.json
