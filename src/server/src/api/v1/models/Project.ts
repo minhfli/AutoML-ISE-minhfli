@@ -12,7 +12,6 @@ export class Project {
     @PrimaryGeneratedColumn("uuid")
     id: string;
 
-
     @Column()
     name: string
 
@@ -44,5 +43,5 @@ export class Project {
     })
     datasets: Dataset[]
 
-   
+
 }

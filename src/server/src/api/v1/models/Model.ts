@@ -12,10 +12,10 @@ export class Model {
 
     @Column()
     description: string
-    
+
     @Column()
     status: string
-    
+
     @Column()
     url: string
 
