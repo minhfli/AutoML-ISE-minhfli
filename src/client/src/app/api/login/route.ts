@@ -5,15 +5,10 @@ import config from '@/config/config';
 export async function POST(req: NextRequest) {
     try {
         const body = await req.json();
-
         console.log(body);
 
         const response = await axios.post(`${config.backendURL}/auth/login`, body);
         if (response.status === 200) {
-            // const accessToken = response.data.access_token;
-            // req.cookies.set('accessToken', accessToken);
-            // console.log(accessToken);
-            // console.log(req.cookies);
             return new NextResponse(JSON.stringify(response.data), {
                 status: 200,
                 headers: {

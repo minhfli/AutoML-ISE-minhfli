@@ -1,4 +1,4 @@
-import {Entity, Column, ManyToOne, OneToOne, Index, PrimaryColumn, PrimaryGeneratedColumn} from "typeorm"
+import { Entity, Column, ManyToOne, OneToOne, Index, PrimaryColumn, PrimaryGeneratedColumn } from "typeorm"
 import { Project } from "./Project";
 import { ulid } from "ulid";
 
@@ -11,7 +11,7 @@ export class Dataset {
     @Index()
     @Column()
     bucket_url: string
-    
+
     @Column()
     name: string
 

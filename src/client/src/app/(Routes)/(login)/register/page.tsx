@@ -48,16 +48,23 @@ export default function RegisterForm() {
     })
 
     async function onSubmit(values: z.infer<typeof formSchema>) {
-        const result = await axios.post("/api/register", {
-            email: values.email,
-            username: values.username,
-            password: values.password,
-        })
-        if (result.status >= 200 && result.status < 300) {
-            toast.success("Register successful!");
-            router.push('/login');
-        } else {
-            toast.error("Register failed! Check your form");
+        try {
+            const result = await axios.post("/api/register", {
+                email: values.email,
+                username: values.username,
+                password: values.password,
+            })
+            console.log(result);
+            if (result.status === 200) {
+                toast.error("This email aldready exists");
+            } else if (result.status === 201) {
+                toast.success("Register successful!");
+                router.push('/login');
+            } else {
+                toast.error("Register failed! Check your form");
+            }
+        } catch (error: any) {
+            toast.error(JSON.stringify(error.message));
         }
     }
     const renderField = (name: "username" | "password" | "repeatPassword" | "email", label: string, description: string, type = 'text') => (
