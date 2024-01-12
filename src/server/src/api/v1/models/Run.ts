@@ -6,10 +6,7 @@ import { Model } from './Model';
 
 @Entity()
 export class Run {
-    @PrimaryColumn({
-        type: 'varchar',
-        default: () => `'${ulid()}'`
-    })
+    @PrimaryGeneratedColumn("uuid")
     id: string;
 
     @Column()

@@ -1,4 +1,4 @@
-// page.tsx or [page].tsx or any other page file
+// [id].tsx or [page].tsx or any other page file
 "use client";
 import React from "react";
 import Dropzone from "react-dropzone";

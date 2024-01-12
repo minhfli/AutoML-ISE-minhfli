@@ -9,10 +9,7 @@ import { ulid } from "ulid";
 
 @Entity()
 export class Project {
-    @PrimaryColumn({
-        type: 'varchar',
-        default: () => `'${ulid()}'`
-    })
+    @PrimaryGeneratedColumn("uuid")
     id: string;
 
 

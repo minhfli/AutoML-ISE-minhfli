@@ -9,7 +9,7 @@ export const db = new DataSource({
     url: config.postgresURL,
     database: "test",
     entities: [schema.User, schema.Project, schema.Run, schema.Model, schema.Dataset],
-    logging: true,
+    logging: false,
     synchronize: true,
     cache: true,
     logger: "advanced-console"

@@ -1,7 +1,7 @@
 import {UserRequest, UserServices} from "../services/user"; // Import the user services
 import {Request, Response} from "express";
 import bcrypt from 'bcrypt';
-import { genarateToken } from "../utils/jwt";
+import {generateToken} from "../utils/jwt";
 import config from "../../../config";
 
 const createUser = async (req: Request, res: Response) => {
@@ -39,7 +39,7 @@ const checkLogin = async (req: Request, res: Response) => {
         }
         const match = await bcrypt.compare(password, user.password);
         if (match) {
-            const accessToken = await genarateToken(user, config.accessTokenRequest, 600) // 10p
+            const accessToken = await generateToken(user, config.accessTokenRequest) // default is 365 days
             res.status(200).json({
                 message: "User logged in successfully",
                 access_token: accessToken,
