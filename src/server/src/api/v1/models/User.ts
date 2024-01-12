@@ -5,7 +5,7 @@ import { Run } from "./Run";
 
 @Entity()
 export class User {
-    @PrimaryGeneratedColumn("identity")
+    @PrimaryGeneratedColumn("uuid")
     id: string;
 
 

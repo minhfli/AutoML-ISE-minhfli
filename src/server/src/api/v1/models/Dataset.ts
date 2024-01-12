@@ -1,13 +1,10 @@
-import { Entity, Column, ManyToOne, OneToOne, Index, PrimaryColumn } from "typeorm"
+import {Entity, Column, ManyToOne, OneToOne, Index, PrimaryColumn, PrimaryGeneratedColumn} from "typeorm"
 import { Project } from "./Project";
 import { ulid } from "ulid";
 
 @Entity()
 export class Dataset {
-    @PrimaryColumn({
-        type: 'varchar',
-        default: () => `'${ulid()}'`
-    })
+    @PrimaryGeneratedColumn("uuid")
     id: string;
 
 

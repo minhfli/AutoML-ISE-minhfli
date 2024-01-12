@@ -1,6 +1,6 @@
 from app.utils.gcp import Storage
 
-storage = None
+storage: Storage = Storage()
 
 
 def get_storage_client() -> Storage:

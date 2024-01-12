@@ -1,17 +1,18 @@
 import jwt from 'jsonwebtoken'
-import { User } from '../models'
+import {User} from '../models'
 
-type TokenPayLoad = {
+export type TokenPayLoad = {
     id: string;
     name: string;
     email: string;
 }
 
-const genarateToken = (user: User, secretSignature: string, tokenLife: number): Promise<string> =>
+// default token life is 365 days :v implement refresh token later
+const generateToken = (user: User, secretSignature: string, tokenLife: string = "365d"): Promise<string> =>
     new Promise((resolve, reject) => {
-        const { id, name, email } = user;
-        const payload: TokenPayLoad = { id, name, email };
-        const options = { expiresIn: tokenLife };
+        const {id, name, email} = user;
+        const payload: TokenPayLoad = {id, name, email};
+        const options = {expiresIn: tokenLife};
 
         jwt.sign(payload, secretSignature, options, (error, token) => {
             if (error) {
@@ -25,7 +26,7 @@ const genarateToken = (user: User, secretSignature: string, tokenLife: number): 
         });
     });
 
-const verifyToken = (token: string, secretSignature: string) : Promise<TokenPayLoad> =>
+const verifyToken = (token: string, secretSignature: string): Promise<TokenPayLoad> =>
     new Promise((resolve, reject) => {
         jwt.verify(token, secretSignature, (error, decoded) => {
             if (error) {
@@ -35,4 +36,4 @@ const verifyToken = (token: string, secretSignature: string) : Promise<TokenPayL
         });
     })
 
-export {genarateToken, verifyToken}
+export {generateToken, verifyToken}

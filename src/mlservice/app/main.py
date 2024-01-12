@@ -21,14 +21,13 @@ def read_root():
 
 app.include_router(image_classifier_routes.router)
 
-
-@serve.deployment(num_replicas=1, ray_actor_options={"num_cpus": 8, "num_gpus": 1})
-@serve.ingress(app)
-class FastAPIWrapper:
-    pass
+# @serve.deployment(num_replicas=1, ray_actor_options={"num_cpus": 8, "num_gpus": 1})
+# @serve.ingress(app)
+# class FastAPIWrapper:
+#     pass
 
 
 if __name__ == "__main__":
-    ray_app = FastAPIWrapper.bind()
+    # ray_app = FastAPIWrapper.bind()
     os.system("uvicorn main:app --reload")
     # os.system("serve run main:ray_app")

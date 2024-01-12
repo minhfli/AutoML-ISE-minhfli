@@ -218,7 +218,7 @@ class Storage(metaclass=SingletonMeta):
             print("Error in downloading blob: ", error)
             return False
 
-    async def download_blob_async(self, bucket_name: LiteralString, source_blob_name: Path,
+    async def download_blob_async(self, bucket_name: Union[LiteralString, str], source_blob_name: Path,
                                   destination_file_name: Path) -> bool:
         """Downloads a blob from the bucket."""
         try:
