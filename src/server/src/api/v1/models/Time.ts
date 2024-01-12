@@ -9,12 +9,7 @@ export class Time {
     @UpdateDateColumn({default: () => "CURRENT_TIMESTAMP", onUpdate: "CURRENT_TIMESTAMP"})
     updated_at: Date
 
-    @PrimaryColumn({
-        type: 'varchar',
-        default: () => `'${ulid()}'`
-    })
+    @PrimaryGeneratedColumn("uuid")
     id: string;
-
-
 
 }

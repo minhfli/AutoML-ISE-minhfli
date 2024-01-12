@@ -18,17 +18,20 @@ type formSchemaType = {
 
 async function testSubmit(form: formSchemaType) {
     try {
-        const res = await axios.post('/api/test', form);
+        const res = await axios.post("/api/project", {
+            name : form.name,
+            task: form.task,
+            modelsSearch: form.modelsSearch,
+        });
 
-        toast.success(JSON.stringify(form.name));
-        toast.success(JSON.stringify(form.task));
-        toast.success(JSON.stringify(form.modelsSearch));
-
-        // if (res.status === 200) {
-        //     setFeedback('Project created successfully.');
-        // } else {
-        //     setFeedback('Something went wrong.');
-        // }
+        if (res.status === 200) {
+            toast.success(JSON.stringify(form.name));
+            toast.success(JSON.stringify(form.task));
+            toast.success(JSON.stringify(form.modelsSearch));
+            toast.success('Project created successfully.');
+        } else {
+            toast.error('Something went wrong.');
+        }
     } catch (error: any) {
         toast.error(JSON.stringify(error.message));
         // setFeedback('Failed to submit. Please try again later.');
@@ -163,4 +166,3 @@ export default function Index() {
 
     )
 }
-

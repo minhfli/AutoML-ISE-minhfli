@@ -1,12 +1,19 @@
 import {UserRequest, UserServices} from "../services/user"; // Import the user services
 import {Request, Response} from "express";
 import bcrypt from 'bcrypt';
-import { genarateToken } from "../utils/jwt";
+import {generateToken} from "../utils/jwt";
 import config from "../../../config";
 
 const createUser = async (req: Request, res: Response) => {
     try {
         let {username, email, password} = req.body as UserRequest;
+        const existUser = await UserServices.findByEmail(email);
+        if (existUser) {
+            res.status(404).json({
+                message: "User already exists",
+            });
+            return;
+        }
         password = await bcrypt.hash(password, 10);
         const user = await UserServices.createUser({username, email, password});
 
@@ -39,7 +46,7 @@ const checkLogin = async (req: Request, res: Response) => {
         }
         const match = await bcrypt.compare(password, user.password);
         if (match) {
-            const accessToken = await genarateToken(user, config.accessTokenRequest, 600) // 10p
+            const accessToken = await generateToken(user, config.accessTokenRequest) // default is 365 days
             res.status(200).json({
                 message: "User logged in successfully",
                 access_token: accessToken,

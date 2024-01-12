@@ -9,12 +9,8 @@ import { ulid } from "ulid";
 
 @Entity()
 export class Project {
-    @PrimaryColumn({
-        type: 'varchar',
-        default: () => `'${ulid()}'`
-    })
+    @PrimaryGeneratedColumn("uuid")
     id: string;
-
 
     @Column()
     name: string
@@ -47,5 +43,5 @@ export class Project {
     })
     datasets: Dataset[]
 
-   
+
 }
