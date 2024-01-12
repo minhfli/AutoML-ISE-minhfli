@@ -32,7 +32,8 @@ class AutogluonTrainer(object):
 		try:
 			predictor = MultiModalPredictor(label="label", path=str(model_path), **self.model_args)
 			predictor.fit(
-       			str(train_data_path), str(val_data_path),
+       			train_data=str(train_data_path),
+          		tuning_data=str(val_data_path),
 				save_path=str(model_path),
 				**self.fit_args,
 			)
@@ -51,9 +52,8 @@ class AutogluonTrainer(object):
 		return None
 
 
-	async def train_async(self, train_data_path: Path, val_data_path: Path, model_path: Path,
-						time_expected: int) -> Union[MultiModalPredictor, None]:
-		return await asyncio.to_thread(self.train, train_data_path, val_data_path, model_path, time_expected)
+	async def train_async(self, train_data_path: Path, val_data_path: Path, model_path: Path) -> Union[MultiModalPredictor, None]:
+		return await asyncio.to_thread(self.train, train_data_path, val_data_path, model_path)
 
 
 	def evaluate(self, predictor: MultiModalPredictor, test_data_path: Path) -> Optional[float]:

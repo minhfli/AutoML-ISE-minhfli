@@ -9,10 +9,11 @@ from contextlib import asynccontextmanager
 
 from google.cloud.storage import Client
 
-from app.image_classifier.autogluon_trainer import train_async
+from app.image_classifier.autogluon_trainer import AutogluonTrainer
 from app.image_classifier.model import TrainingRequest
 from app.utils import get_storage_client, storage
 from app.utils.dataset_utils import split_data, create_csv, remove_folders_except, create_folder
+
 
 router = APIRouter()
 
@@ -54,12 +55,12 @@ async def handler(request: TrainingRequest):
         # # delete all folders except split folder to save memory
         remove_folders_except(Path(user_dataset_path), "split")
         #
-        # await train_async(
-        #     Path(f"{user_dataset_path}/split/train"),
-        #     Path(f"{user_dataset_path}/split/val"),
-        #     Path(f"{user_dataset_path}/trained_models"),
-        #     request.time_expected
-        # )
+        trainer = AutogluonTrainer(request.request_body)
+        await trainer.train_async(
+            Path(f"{user_dataset_path}/train.csv"),
+            Path(f"{user_dataset_path}/val.csv"),
+            Path(f"{user_dataset_path}/trained_models")
+        )
 
 
 

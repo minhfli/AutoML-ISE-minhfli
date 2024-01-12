@@ -4,7 +4,7 @@ from contextlib import asynccontextmanager
 
 from ray import serve
 
-from image_classifier import routes as image_classifier_routes
+from app.image_classifier import routes as image_classifier_routes
 
 app = FastAPI()
 
