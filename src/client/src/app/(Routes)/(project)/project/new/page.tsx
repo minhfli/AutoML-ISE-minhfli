@@ -7,7 +7,7 @@ import { useEffect, useState } from "react";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle, } from "@/src/components/ui/card";
 import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue, } from "@/src/components/ui/select";
 import { toast } from 'sonner'
-
+import { useRouter } from 'next/navigation';
 
 type formSchemaType = {
     name: string;
@@ -23,7 +23,7 @@ async function testSubmit(form: formSchemaType) {
             task: form.task,
             modelsSearch: form.modelsSearch,
         });
-
+        console.log(res.status);
         if (res.status === 200) {
             toast.success(JSON.stringify(form.name));
             toast.success(JSON.stringify(form.task));
@@ -34,6 +34,7 @@ async function testSubmit(form: formSchemaType) {
         }
     } catch (error: any) {
         toast.error(JSON.stringify(error.message));
+
         // setFeedback('Failed to submit. Please try again later.');
     } finally {
         // setSubmitting(false);
@@ -42,7 +43,7 @@ async function testSubmit(form: formSchemaType) {
 
 
 export default function Index() {
-
+    const router = useRouter();
 
     const form: formSchemaType = {
         name: '',
@@ -55,6 +56,36 @@ export default function Index() {
         form.name = event.target.value; // ko hieu sao lai bug nen danh phai lam nhu nay
     };
 
+
+    async function onSubmit(form: formSchemaType) {
+        try {
+            const res = await axios.post("/api/project", {
+                name : form.name,
+                task: form.task,
+                modelsSearch: form.modelsSearch,
+            });
+            console.log(res.status);
+            if (res.status === 201) {
+                toast.success(JSON.stringify(form.name));
+                toast.success(JSON.stringify(form.task));
+                toast.success(JSON.stringify(form.modelsSearch));
+                toast.success('Project created successfully.');
+            } else {
+                toast.error('Something went wrong.');
+            }
+        } catch (error: any) {
+
+            if (error.response && error.response.status === 401) {
+                toast.error(JSON.stringify("User has not logged in yet"));
+                router.push('/login');
+            } else {
+                toast.error(JSON.stringify(error.message));
+            }
+            // setFeedback('Failed to submit. Please try again later.');
+        } finally {
+            // setSubmitting(false);
+        }
+    }
 
 
 
@@ -153,7 +184,7 @@ export default function Index() {
                         <Button variant="outline">Cancel</Button>
                         <Button
                             onClick={async () => {
-                                await testSubmit(form)
+                                await onSubmit(form)
                                 /*
                                     TODO: Submit form
                                 */
