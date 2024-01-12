@@ -52,7 +52,7 @@ class Storage(metaclass=SingletonMeta):
             print("Error when initializing storage client: ", error)
             exit(1)
 
-    def create_bucket(self, bucket_name: LiteralString) -> Bucket:
+    def create_bucket(self, bucket_name: str) -> Bucket:
         """Create a new bucket in specific location with storage class"""
         try:
             new_bucket: Bucket = self.storage_client.create_bucket(bucket_name)
@@ -61,7 +61,7 @@ class Storage(metaclass=SingletonMeta):
         except Exception as error:
             print("Error in creating bucket: ", error)
 
-    async def create_bucket_async(self, bucket_name: LiteralString) -> Bucket:
+    async def create_bucket_async(self, bucket_name: str) -> Bucket:
         """Create a new bucket in specific location with storage class"""
         try:
             return await asyncio.to_thread(self.create_bucket, bucket_name)
@@ -86,7 +86,7 @@ class Storage(metaclass=SingletonMeta):
             logging.error(f"Async list buckets error: {error}")
             raise
 
-    def delete_bucket(self, bucket_name: LiteralString) -> bool:
+    def delete_bucket(self, bucket_name: str) -> bool:
         bucket = self.storage_client.bucket(bucket_name)
         """Deletes a bucket. even if not empty."""
         try:
@@ -101,7 +101,7 @@ class Storage(metaclass=SingletonMeta):
             print("Bucket {} deleted".format(bucket_name))
             return True
 
-    def get_bucket(self, bucket_name: LiteralString) -> Union[Bucket, None]:
+    def get_bucket(self, bucket_name: str) -> Union[Bucket, None]:
         """Retrieves a bucket if it exists"""
         try:
             return self.storage_client.get_bucket(bucket_name)
@@ -109,7 +109,7 @@ class Storage(metaclass=SingletonMeta):
             print("Error in getting bucket: ", error)
             return None
 
-    def upload_blob(self, bucket_name: LiteralString, source_file_name: Path,
+    def upload_blob(self, bucket_name: str, source_file_name: Path,
                     destination_blob_name: Path) -> bool:
         """Uploads a single file to the bucket.
         Vi du upload_blob("user1_bucket", "datasets/flowers/file_1", "flowers/des_1")
@@ -126,7 +126,7 @@ class Storage(metaclass=SingletonMeta):
             print("Error in uploading blob: ", error)
             return False
 
-    async def upload_blob_async(self, bucket_name: LiteralString, source_file_name: Path,
+    async def upload_blob_async(self, bucket_name: str, source_file_name: Path,
                                 destination_blob_name: Path) -> bool:
         """Uploads a single file to the bucket.
         Vi du upload_blob("user1_bucket", "datasets/flowers/file_1", "flowers/des_1")
@@ -137,7 +137,7 @@ class Storage(metaclass=SingletonMeta):
             logging.error(f"Async upload blob error: {error}")
             raise
 
-    def upload_blob_from_string(self, bucket_name: LiteralString, source_string: str,
+    def upload_blob_from_string(self, bucket_name: str, source_string: str,
                                 destination_blob_name: Path) -> bool:
         try:
             bucket = self.storage_client.bucket(bucket_name)
@@ -148,7 +148,7 @@ class Storage(metaclass=SingletonMeta):
             print("Error in uploading blob: ", error)
         return False
 
-    async def upload_blob_from_string_async(self, bucket_name: LiteralString, source_string: str,
+    async def upload_blob_from_string_async(self, bucket_name: str, source_string: str,
                                             destination_blob_name: Path) -> bool:
         try:
             return await asyncio.to_thread(self.upload_blob_from_string, bucket_name, source_string,
@@ -172,7 +172,7 @@ class Storage(metaclass=SingletonMeta):
             print(f"Error in creating folder: {type(error).__name__}: {error}")
         return False
 
-    def upload_from_folder(self, bucket_name, source_directory: Path, destination_prefix: LiteralString,
+    def upload_from_folder(self, bucket_name, source_directory: Path, destination_prefix: str,
                            max_workers: int = 10) -> list | None:
         try:
             bucket = self.storage_client.bucket(bucket_name)
@@ -195,7 +195,7 @@ class Storage(metaclass=SingletonMeta):
             print("Error in uploading from folder: ", error)
             return None
 
-    async def upload_from_folder_async(self, bucket_name, source_directory: Path, destination_prefix: LiteralString,
+    async def upload_from_folder_async(self, bucket_name, source_directory: Path, destination_prefix: str,
                                        max_workers: int = 10) -> list | None:
         try:
             return await asyncio.to_thread(
@@ -205,7 +205,7 @@ class Storage(metaclass=SingletonMeta):
             logging.error(f"Async upload from folder error: {error}")
             raise
 
-    def download_blob(self, bucket_name: LiteralString, source_blob_name: Path,
+    def download_blob(self, bucket_name: str, source_blob_name: Path,
                       destination_file_name: Path) -> bool:
         """Downloads a blob from the bucket."""
         try:
@@ -218,7 +218,7 @@ class Storage(metaclass=SingletonMeta):
             print("Error in downloading blob: ", error)
             return False
 
-    async def download_blob_async(self, bucket_name: Union[LiteralString, str], source_blob_name: Path,
+    async def download_blob_async(self, bucket_name: Union[str, str], source_blob_name: Path,
                                   destination_file_name: Path) -> bool:
         """Downloads a blob from the bucket."""
         try:
@@ -255,7 +255,7 @@ class Storage(metaclass=SingletonMeta):
             logging.error(f"Async download error: {error}")
             raise
 
-    def list_blobs(self, bucket_name: LiteralString, prefix: LiteralString = None) -> List[Any]:
+    def list_blobs(self, bucket_name: str, prefix: str = None) -> List[Any]:
         """Lists all the blobs in the bucket. prefix will be append at the end of the bucket name -> folder"""
         try:
             bucket = self.storage_client.bucket(bucket_name)
@@ -267,7 +267,7 @@ class Storage(metaclass=SingletonMeta):
             print("Error in listing blobs: ", error)
             return []
 
-    def delete_folder(self, bucket_name: LiteralString, folder_name: LiteralString) -> bool:
+    def delete_folder(self, bucket_name: str, folder_name: str) -> bool:
         try:
             bucket = self.storage_client.bucket(bucket_name)
             blobs = bucket.list_blobs(prefix=folder_name)
