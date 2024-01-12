@@ -1,31 +1,34 @@
-import {UserRequest, UserServices} from "../services/user"; // Import the user services
-import {Request, Response} from "express";
+import { UserRequest, UserServices } from "../services/user"; // Import the user services
+import { Request, Response } from "express";
 import bcrypt from 'bcrypt';
-import {generateToken} from "../utils/jwt";
+import { generateToken } from "../utils/jwt";
 import config from "../../../config";
 
 const createUser = async (req: Request, res: Response) => {
     try {
-        let {username, email, password} = req.body as UserRequest;
+        let { username, email, password } = req.body as UserRequest;
         const existUser = await UserServices.findByEmail(email);
         if (existUser) {
-            res.status(404).json({
+            // console.log(existUser);
+            res.status(200).json({
                 message: "User already exists",
             });
-            return;
-        }
-        password = await bcrypt.hash(password, 10);
-        const user = await UserServices.createUser({username, email, password});
-
-        if (user === true) {
-            res.status(201).json({
-                message: "User created successfully",
-            });
         } else {
-            res.status(400).json({
-                message: "User could not be created, please check the provided data.",
-            });
+
+            password = await bcrypt.hash(password, 10);
+            const user = await UserServices.createUser({ username, email, password });
+
+            if (user === true) {
+                res.status(201).json({
+                    message: "User created successfully",
+                });
+            } else {
+                res.status(400).json({
+                    message: "User could not be created, please check the provided data.",
+                });
+            }
         }
+
     } catch (error: any) {
         console.error('User creation failed:', error);
         res.status(500).json({
@@ -36,7 +39,7 @@ const createUser = async (req: Request, res: Response) => {
 
 const checkLogin = async (req: Request, res: Response) => {
     try {
-        const {email, password} = req.body as UserRequest;
+        const { email, password } = req.body as UserRequest;
         const user = await UserServices.findByEmail(email);
         if (user === null) {
             res.status(404).json({

@@ -10,7 +10,15 @@ export async function POST(req: NextRequest) {
         console.log(body);
         // Gửi request lên server
         const response = await axios.post(`${config.backendURL}/auth/register`, body);
+
         if (response.status === 201) {
+            return new NextResponse(JSON.stringify(response.data), {
+                status: 201,
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            });
+        } else if (response.status === 200) {
             return new NextResponse(JSON.stringify(response.data), {
                 status: 200,
                 headers: {
