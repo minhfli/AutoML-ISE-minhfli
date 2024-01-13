@@ -1,7 +1,5 @@
 import {NextRequest, NextResponse} from "next/server";
 import jwt from "jsonwebtoken";
-import {usePathname, useSearchParams, useRouter} from "next/navigation";
-
 export async function middleware(request: NextRequest) {
     return NextResponse.next();
 }

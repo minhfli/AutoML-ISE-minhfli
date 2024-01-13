@@ -72,7 +72,7 @@ export default function RootLayout({
           </header>
 
           {/* Content area */}
-          <main className="flex-grow overflow-hidden p-4 ">{children}</main>
+          <main className="flex-grow p-4 ">{children}</main>
           <Toaster richColors expand={false} />
         </ThemeProvider>
       </body>
