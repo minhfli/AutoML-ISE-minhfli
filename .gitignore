@@ -61,3 +61,8 @@ node_modules
 src/mlservice/service-account-gcs.json
 src/server/.yarn/install-state.gz
 *.yml
+src/server/.pnp.cjs
+src/server/.pnp.loader.mjs
+src/client/.yarn/install-state.gz
+src/server/.gitattributes
+src/server/.editorconfig
