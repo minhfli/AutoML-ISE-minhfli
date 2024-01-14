@@ -70,6 +70,7 @@ export default function Index() {
                 toast.success(JSON.stringify(form.task));
                 toast.success(JSON.stringify(form.modelsSearch));
                 toast.success('Project created successfully.');
+                router.push('/data');
             } else {
                 toast.error('Something went wrong.');
             }
