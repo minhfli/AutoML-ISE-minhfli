@@ -1,6 +1,7 @@
 import dotenv from 'dotenv';
-
+import { Storage } from '@google-cloud/storage';
 dotenv.config();
+
 
 
 const backendURL = process.env.BACKEND_URL || 'http://localhost:3000';
@@ -15,4 +16,7 @@ const config = {
     refreshTokenSecret,
     nextApiUrl
 }
+export const storage = new Storage({
+    keyFilename: config.gcpCredentials
+});
 export default config;
