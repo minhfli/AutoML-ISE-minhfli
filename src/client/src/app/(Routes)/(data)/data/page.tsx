@@ -1,8 +1,27 @@
 "use client";
-import React, {ChangeEvent, useRef} from 'react';
+import React, { ChangeEvent, useEffect, useRef } from 'react';
+import ModalUploadFile from './ModalUploadFile';
+
+interface ImageObject {
+    name: string;
+    url: string;
+}
+
+interface Folder {
+    name: string;
+    subfolders?: Folder[];
+    images?: ImageObject[];
+}
 
 export default function App() {
     const [progress, setProgress] = React.useState<number>(0);
+    const [modalVisible, setModalVisible] = React.useState<boolean>(false);
+    const [modalInfo, setModalInfo] = React.useState<Folder>({
+        name: '',
+        subfolders: [],
+        images: [],
+    });
+
     const done = useRef<number>(0);
     const handleFileChange = (event: ChangeEvent<HTMLInputElement>) => {
         if (!event.target.files) return;
@@ -10,6 +29,33 @@ export default function App() {
         event.preventDefault();
         const files = Array.from(event.target.files);
         if (files && files.length > 0) {
+            setModalInfo((prevModalInfo) => {
+                const newModalInfo: Folder = { ...prevModalInfo, subfolders: [] };
+                for (const file of files) {
+                    const pathParts = file.webkitRelativePath.split('/');
+                    if (!newModalInfo.subfolders) {
+                        newModalInfo.subfolders = [];
+                    }
+                    let subfolder = newModalInfo.subfolders.find(sub => sub.name === pathParts[1]);
+                    if (!subfolder) {
+                        subfolder = {
+                            name: pathParts[1],
+                            subfolders: [],
+                            images: [],
+                        };
+                        newModalInfo.subfolders.push(subfolder);
+                    }
+                    subfolder.images = subfolder.images || [];
+                    subfolder.images.push({
+                        name: file.name,
+                        url: URL.createObjectURL(file),
+                    });
+                }
+                newModalInfo.name = files[0].webkitRelativePath.split('/')[0];
+                console.log(newModalInfo);
+                return newModalInfo;
+            });
+
             // Array.fromAsync thi ok hon :v
             for (const file of files) {
                 const reader = new FileReader();
@@ -35,12 +81,32 @@ export default function App() {
         }
     };
 
+    const closeModal = () => {
+        setModalVisible(false);
+    };
+
+    useEffect(() => {
+        console.log(`Progress changed: ${progress}%`);
+
+        if (progress === 100) {
+            console.log('Progress is 100%, opening modal');
+            setModalVisible(true);
+        }
+    }, [progress]);
+
     return (
         <div>
             <input type="file" onChange={handleFileChange}
-                   multiple webkitdirectory="" mozdirectory=""
-                   accept="image/*"/>
+                multiple webkitdirectory="" mozdirectory=""
+                accept="image/*" />
             <h1>{progress}</h1>
+
+            {modalVisible && (
+                <ModalUploadFile
+                    folder={modalInfo}
+                    onClose={closeModal}
+                />
+            )}
         </div>
     );
 }

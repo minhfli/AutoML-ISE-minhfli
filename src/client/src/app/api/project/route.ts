@@ -1,14 +1,14 @@
 import { NextRequest, NextResponse } from 'next/server';
 import axios from "axios";
 import config from '@/config/config';
-import { middleware } from '@/middleware';
+// import { middleware } from '@/src/middleware';
 
 export async function POST(req: NextRequest) {
     try {
-        const middlewareResponse = await middleware(req);
-        if (middlewareResponse?.status === 401) {
-            return middlewareResponse;
-        }
+        // const middlewareResponse = await middleware(req);
+        // if (middlewareResponse?.status === 401) {
+        //     return middlewareResponse;
+        // }
         const body = await req.json();
 
         console.log(body);

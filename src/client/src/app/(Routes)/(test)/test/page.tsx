@@ -5,8 +5,8 @@ import React, {HtmlHTMLAttributes, useEffect, useState} from "react";
 import Image from "next/image";
 import {Button} from "@/src/components/ui/button";
 // https://stackoverflow.com/questions/71444475/webkitdirectory-in-typescript-and-react
-// https://github.com/facebook/react/issues/3468    
-// dirty hack to make webkitdirectory work with react :v 
+// https://github.com/facebook/react/issues/3468
+// dirty hack to make webkitdirectory work with react :v
 
 declare module "react" {
     interface InputHTMLAttributes<T> extends HTMLAttributes<T> {
