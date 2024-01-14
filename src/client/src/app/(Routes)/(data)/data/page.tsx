@@ -25,7 +25,7 @@ export default function App() {
     const done = useRef<number>(0);
     const handleFileChange = (event: ChangeEvent<HTMLInputElement>) => {
         if (!event.target.files) return;
-
+        
         event.preventDefault();
         const files = Array.from(event.target.files);
         if (files && files.length > 0) {
