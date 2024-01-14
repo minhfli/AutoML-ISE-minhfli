@@ -1,8 +1,8 @@
 import { Router } from "express";
-import createProject from "./createProject";
+import { ProjectController } from "../../../controllers/project";
 
 const projectRouter = Router();
 
-projectRouter.use("/createProject", createProject);
+projectRouter.use("/createProject", ProjectController.createProject);
 
 export default projectRouter;

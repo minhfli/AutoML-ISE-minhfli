@@ -13,6 +13,11 @@ interface Folder {
     images?: ImageObject[];
 }
 
+interface FormDataInfo {
+    label: string;
+    file: File;
+}
+
 export default function App() {
     const [progress, setProgress] = React.useState<number>(0);
     const [modalVisible, setModalVisible] = React.useState<boolean>(false);
@@ -22,10 +27,12 @@ export default function App() {
         images: [],
     });
 
+    const [formDataInfo, setFormDataInfo] = React.useState<FormDataInfo[]>([]);
+
     const done = useRef<number>(0);
     const handleFileChange = (event: ChangeEvent<HTMLInputElement>) => {
         if (!event.target.files) return;
-        
+
         event.preventDefault();
         const files = Array.from(event.target.files);
         if (files && files.length > 0) {
@@ -56,6 +63,16 @@ export default function App() {
                 return newModalInfo;
             });
 
+            const newFormDataInfo: FormDataInfo[] = files.map((file) => {
+                const pathParts = file.webkitRelativePath.split('/');
+                return {
+                    label: pathParts[1],
+                    file: file,
+                };
+            });
+
+            setFormDataInfo(newFormDataInfo);
+
             // Array.fromAsync thi ok hon :v
             for (const file of files) {
                 const reader = new FileReader();
@@ -85,6 +102,29 @@ export default function App() {
         setModalVisible(false);
     };
 
+    const submitModal = () => {
+        const form = new FormData();
+
+        formDataInfo.forEach((formData) => {
+            form.append(formData.label, formData.file);
+            console.log(formData);
+        });
+
+        fetch('http://localhost:3000/api/upload', {
+            method: 'POST',
+            body: form,
+            headers: {
+                'Content-Type': 'multipart/form-data'
+            }
+        })
+        .then((res) => {
+            console.log(res);
+        })
+        .catch((err) => {
+            console.log(err);
+        });
+    };
+
     useEffect(() => {
         console.log(`Progress changed: ${progress}%`);
 
@@ -105,6 +145,7 @@ export default function App() {
                 <ModalUploadFile
                     folder={modalInfo}
                     onClose={closeModal}
+                    onSubmit={submitModal}
                 />
             )}
         </div>

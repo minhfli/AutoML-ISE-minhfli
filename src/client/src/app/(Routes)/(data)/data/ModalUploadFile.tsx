@@ -3,6 +3,7 @@ import React from 'react';
 interface ModalUploadFileProps {
     folder: Folder;
     onClose: () => void;
+    onSubmit: () => void;
 }
 
 interface ImageObject {
@@ -17,7 +18,7 @@ interface Folder {
 }
 
 
-const ModalUploadFile: React.FC<ModalUploadFileProps> = ({ folder, onClose }) => {
+const ModalUploadFile: React.FC<ModalUploadFileProps> = ({ folder, onClose, onSubmit }) => {
     const modalBoxStyle: React.CSSProperties = {
         display: 'flex',
         flexDirection: 'column',
@@ -51,21 +52,26 @@ const ModalUploadFile: React.FC<ModalUploadFileProps> = ({ folder, onClose }) =>
                         <h4>Subfolder: {subfolder.name}</h4>
                         {subfolder.images &&
                             subfolder.images.slice(0, 10).map((image, imgIndex) => (
-                                <div key={imgIndex}>
+                                <div key={imgIndex} style={{ padding: '2px' }}>
                                     <img
                                         src={image.url}
-                                        width={200}
-                                        height={200}
+                                        width={800}
+                                        height={800}
+                                        style={{ objectFit: 'cover' }}
                                         alt={`Image preview ${imgIndex}`}
                                     />
                                 </div>
                             ))}
                     </div>
                 ))}
-
-            <button className="btn" onClick={onClose}>
-                Close
-            </button>
+            <div style={{ display: 'flex', gap: '10px', overflowX: 'auto' }}>
+                <button className="btn" onClick={onSubmit}>
+                    Add to project
+                </button>
+                <button className="btn" onClick={onClose}>
+                    Close
+                </button>
+            </div>
         </div>
     );
 };
