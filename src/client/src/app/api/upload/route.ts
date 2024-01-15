@@ -4,38 +4,39 @@ import JSZip from "jszip";
 import { storage } from "@/config/config";
 
 export async function POST(req: NextRequest) {
-    // // data :{
-   //         roses : [
-//                 binary
-    //        ], 
-    // }
+    console.log("POST /api/upload");
     const data = req.formData();
+    // TODO : Lấy user_name và project_name từ req @DuongNam
     const user_name = "lexuanan18102004"
-    const files = (await data).getAll("roses") as File[];
-    const destinationFileName = "meow.zip"
-    const zip = new JSZip(); 
-    
-    
+    const project_name = "flower-classifier"
+    const labels = (await data).getAll("labels") as string[];
+    const mapData = new Map<string, File[]>();
+    for (const label of labels) {
+        mapData.set(label, (await data).getAll(label) as File[]);
+    }
+    const labelCounts: Record<string, number> = {};
+    const zip = new JSZip();
+    const destinationFileName = `${project_name}/datasets/datasets.zip`
     try {
-        await Promise.all(files.map(async (file) => {
-            const bytes = await file.arrayBuffer();
-            const buffer = Buffer.from(bytes);
-            const filePath = `${destinationFileName}/${file.webkitRelativePath}`;
-            zip.file(filePath, buffer);
-        }));
+        for (const [label, files] of mapData) {
+            if (!labelCounts[label]) {
+                labelCounts[label] = 0;
+            }
+            await Promise.all(files.map(async (file) => {
+                const bytes = await file.arrayBuffer();
+                const buffer = Buffer.from(bytes);
+                labelCounts[label] += 1;
+                const extension = file.name.split(".").pop();
+                const filePath = `${label}/${labelCounts[label]}.${extension}`;
+                zip.file(filePath, buffer);
+            }));
+        }
         const zipContent = await zip.generateAsync({ type: "nodebuffer" });
-        
         await storage.bucket(user_name).file(destinationFileName).save(zipContent);
-        return NextResponse.json({
-            status: "ok",
-            message: "Files uploaded successfully"
-        });
+        return NextResponse.json({ success: true });
     } catch (error) {
-        console.error("Error during file upload:", error);
-        return NextResponse.json({
-            status: "error",
-            message: "Error uploading files"
-        });
+        console.log(error);
+        return NextResponse.error();
     }
 }
 
