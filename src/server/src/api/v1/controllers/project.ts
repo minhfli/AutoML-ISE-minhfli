@@ -2,13 +2,15 @@ import { Request, Response } from "express"
 import { ProjectRequest, ProjectServices } from "../services/project"
 
 const createProject = async (req: Request, res: Response) => {
-    let { name, task, modelsSearch } = req.body as ProjectRequest;
+    let { email, name, task, modelsSearch } = req.body as ProjectRequest;
     try {
-        const project = await ProjectServices.createProject({ name, task, modelsSearch });
+        const project = await ProjectServices.createProject({ email, name, task, modelsSearch });
         console.log(project);
-        if (project === true) {
+        if (project) {
             res.status(201).json({
                 message: "Project created successfully",
+                project_name: project.name,
+                user_name: project.user.name,
             });
         } else {
             res.status(400).json({
