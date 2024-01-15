@@ -1,6 +1,8 @@
 "use client";
-import React, { ChangeEvent, useEffect, useRef } from 'react';
+import React, {ChangeEvent, useEffect, useRef} from 'react';
 import ModalUploadFile from './ModalUploadFile';
+import Axios from "axios";
+import { toast } from 'sonner';
 
 interface ImageObject {
     name: string;
@@ -26,6 +28,7 @@ export default function App() {
         subfolders: [],
         images: [],
     });
+    const form = new FormData();
 
     const [formDataInfo, setFormDataInfo] = React.useState<FormDataInfo[]>([]);
 
@@ -37,7 +40,7 @@ export default function App() {
         const files = Array.from(event.target.files);
         if (files && files.length > 0) {
             setModalInfo((prevModalInfo) => {
-                const newModalInfo: Folder = { ...prevModalInfo, subfolders: [] };
+                const newModalInfo: Folder = {...prevModalInfo, subfolders: []};
                 for (const file of files) {
                     const pathParts = file.webkitRelativePath.split('/');
                     if (!newModalInfo.subfolders) {
@@ -59,7 +62,6 @@ export default function App() {
                     });
                 }
                 newModalInfo.name = files[0].webkitRelativePath.split('/')[0];
-                console.log(newModalInfo);
                 return newModalInfo;
             });
 
@@ -102,52 +104,50 @@ export default function App() {
         setModalVisible(false);
     };
 
-    const submitModal = () => {
-        const form = new FormData();
-
+    const submitModal = async () => {
+        const labels = new Set<string>();
         formDataInfo.forEach((formData) => {
             form.append(formData.label, formData.file);
-            console.log(formData);
+            labels.add(formData.label);
         });
-
-        fetch('http://localhost:3000/api/upload', {
-            method: 'POST',
-            body: form,
+        labels.forEach((label) => {
+            form.append('labels', label);
+        });
+        const res = await Axios.post('/api/upload', form, {
             headers: {
-                'Content-Type': 'multipart/form-data'
-            }
-        })
-        .then((res) => {
-            console.log(res);
-        })
-        .catch((err) => {
-            console.log(err);
+                'Content-Type': 'multipart/form-data',
+            },
         });
-    };
-
-    useEffect(() => {
-        console.log(`Progress changed: ${progress}%`);
-
-        if (progress === 100) {
-            console.log('Progress is 100%, opening modal');
-            setModalVisible(true);
+        if(res.status === 200) {
+            toast.success('Upload thành công');
         }
-    }, [progress]);
+        else{
+            toast.error('Upload thất bại');
+        }
+    }
+        useEffect(() => {
+            console.log(`Progress changed: ${progress}%`);
 
-    return (
-        <div>
-            <input type="file" onChange={handleFileChange}
-                multiple webkitdirectory="" mozdirectory=""
-                accept="image/*" />
-            <h1>{progress}</h1>
+            if (progress === 100) {
+                console.log('Progress is 100%, opening modal');
+                setModalVisible(true);
+            }
+        }, [progress]);
 
-            {modalVisible && (
-                <ModalUploadFile
-                    folder={modalInfo}
-                    onClose={closeModal}
-                    onSubmit={submitModal}
-                />
-            )}
-        </div>
-    );
-}
+        return (
+            <div>
+                <input type="file" onChange={handleFileChange}
+                       multiple webkitdirectory="" mozdirectory=""
+                       accept="image/*"/>
+                <h1>{progress}</h1>
+
+                {modalVisible && (
+                    <ModalUploadFile
+                        folder={modalInfo}
+                        onClose={closeModal}
+                        onSubmit={submitModal}
+                    />
+                )}
+            </div>
+        );
+    }
