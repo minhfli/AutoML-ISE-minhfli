@@ -112,12 +112,10 @@ class Storage(metaclass=SingletonMeta):
     def upload_blob(self, bucket_name: str, source_file_name: Path,
                     destination_blob_name: Path) -> bool:
         """Uploads a single file to the bucket.
-        Vi du upload_blob("user1_bucket", "datasets/flowers/file_1", "flowers/des_1")
+        Vi du upload_blob("user1_bucket", "available_checkpoint/flowers/file_1", "flowers/des_1")
         """
         try:
-            start = time.time()
             bucket = self.storage_client.bucket(bucket_name)
-            print("Get bucket in " + str(time.time() - start) + " seconds")
             blob = bucket.blob(destination_blob_name)
             blob.upload_from_filename(source_file_name)
             print("File {} uploaded to {}.".format(source_file_name, destination_blob_name))
@@ -129,7 +127,7 @@ class Storage(metaclass=SingletonMeta):
     async def upload_blob_async(self, bucket_name: str, source_file_name: Path,
                                 destination_blob_name: Path) -> bool:
         """Uploads a single file to the bucket.
-        Vi du upload_blob("user1_bucket", "datasets/flowers/file_1", "flowers/des_1")
+        Vi du upload_blob("user1_bucket", "available_checkpoint/flowers/file_1", "flowers/des_1")
         """
         try:
             return await asyncio.to_thread(self.upload_blob, bucket_name, source_file_name, destination_blob_name)
@@ -218,7 +216,7 @@ class Storage(metaclass=SingletonMeta):
             print("Error in downloading blob: ", error)
             return False
 
-    async def download_blob_async(self, bucket_name: Union[str, str], source_blob_name: Path,
+    async def download_blob_async(self, bucket_name: Union[str, str], source_blob_name: Union[Path, str],
                                   destination_file_name: Path) -> bool:
         """Downloads a blob from the bucket."""
         try:
@@ -277,3 +275,12 @@ class Storage(metaclass=SingletonMeta):
         except Exception as error:
             print("Error in deleting folder: ", error)
             return False
+
+
+if __name__ == "__main__":
+    user_name = "lexuanan18102004"
+    project_name = "flower-classifier"
+    start = time.perf_counter()
+    storage = Storage()
+    storage.upload_blob(user_name, "/home/xuananle/Documents/resnet50-0676ba61.pth", "flower-classifier/trained_models/resnet50-0676ba61.pth")
+    print(f"Time to upload: {time.perf_counter() - start}")

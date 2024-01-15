@@ -16,7 +16,9 @@ type formSchemaType = {
 };
 
 
+
 async function testSubmit(form: formSchemaType) {
+    const router = useRouter();
     try {
         const res = await axios.post("/api/project", {
             name : form.name,
@@ -25,10 +27,8 @@ async function testSubmit(form: formSchemaType) {
         });
         console.log(res.status);
         if (res.status === 200) {
-            toast.success(JSON.stringify(form.name));
-            toast.success(JSON.stringify(form.task));
-            toast.success(JSON.stringify(form.modelsSearch));
             toast.success('Project created successfully.');
+            router.push('/data');
         } else {
             toast.error('Something went wrong.');
         }
