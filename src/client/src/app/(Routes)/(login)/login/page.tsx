@@ -17,6 +17,7 @@ import { toast } from "sonner"
 import axios from "axios"
 import { useRouter } from "next/navigation"
 import { setCookie, getCookie } from 'cookies-next';
+import useLocalStorage from "@/src/hooks/use-local-storage"
 
 const formSchema = z.object({
     email: z.string().min(2, {
@@ -44,6 +45,7 @@ export default function ProfileForm() {
             secure: true,
             sameSite: 'none' as const,
         };
+        localStorage.setItem('userEmail', form.getValues('email'));
         setCookie('accessToken', accessToken, cookieOptions);
         console.log("Cookie: " + getCookie('accessToken', cookieOptions));
     };

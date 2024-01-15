@@ -1,5 +1,5 @@
 "use client";
-import React, {ChangeEvent, useEffect, useRef} from 'react';
+import React, { ChangeEvent, useEffect, useRef } from 'react';
 import ModalUploadFile from './ModalUploadFile';
 import Axios from "axios";
 import { toast } from 'sonner';
@@ -40,7 +40,7 @@ export default function App() {
         const files = Array.from(event.target.files);
         if (files && files.length > 0) {
             setModalInfo((prevModalInfo) => {
-                const newModalInfo: Folder = {...prevModalInfo, subfolders: []};
+                const newModalInfo: Folder = { ...prevModalInfo, subfolders: [] };
                 for (const file of files) {
                     const pathParts = file.webkitRelativePath.split('/');
                     if (!newModalInfo.subfolders) {
@@ -105,6 +105,11 @@ export default function App() {
     };
 
     const submitModal = async () => {
+        const user_name = localStorage.getItem("user_name") as string;
+        const project_name = localStorage.getItem("project_name") as string;
+        form.append('user_name', user_name);
+        form.append('project_name', project_name);
+
         const labels = new Set<string>();
         formDataInfo.forEach((formData) => {
             form.append(formData.label, formData.file);
@@ -118,36 +123,36 @@ export default function App() {
                 'Content-Type': 'multipart/form-data',
             },
         });
-        if(res.status === 200) {
+        if (res.status === 200) {
             toast.success('Upload thành công');
         }
-        else{
+        else {
             toast.error('Upload thất bại');
         }
     }
-        useEffect(() => {
-            console.log(`Progress changed: ${progress}%`);
+    useEffect(() => {
+        console.log(`Progress changed: ${progress}%`);
 
-            if (progress === 100) {
-                console.log('Progress is 100%, opening modal');
-                setModalVisible(true);
-            }
-        }, [progress]);
+        if (progress === 100) {
+            console.log('Progress is 100%, opening modal');
+            setModalVisible(true);
+        }
+    }, [progress]);
 
-        return (
-            <div>
-                <input type="file" onChange={handleFileChange}
-                       multiple webkitdirectory="" mozdirectory=""
-                       accept="image/*"/>
-                <h1>{progress}</h1>
+    return (
+        <div>
+            <input type="file" onChange={handleFileChange}
+                multiple webkitdirectory="" mozdirectory=""
+                accept="image/*" />
+            <h1>{progress}</h1>
 
-                {modalVisible && (
-                    <ModalUploadFile
-                        folder={modalInfo}
-                        onClose={closeModal}
-                        onSubmit={submitModal}
-                    />
-                )}
-            </div>
-        );
-    }
+            {modalVisible && (
+                <ModalUploadFile
+                    folder={modalInfo}
+                    onClose={closeModal}
+                    onSubmit={submitModal}
+                />
+            )}
+        </div>
+    );
+}

@@ -7,8 +7,16 @@ export async function POST(req: NextRequest) {
     console.log("POST /api/upload");
     const data = req.formData();
     // TODO : Lấy user_name và project_name từ req @DuongNam
-    const user_name = "lexuanan18102004"
-    const project_name = "flower-classifier"
+    // const user_name = "lexuanan18102004"
+    // const project_name = "flower-classifier"
+    const user_name = (await data).get("user_name") as string;
+    const project_name = (await data).get("project_name") as string;
+
+    const bucketName = `${user_name}`;
+    const exists = await storage.bucket(bucketName).exists();
+    if (!exists[0]) {
+        await storage.createBucket(bucketName);
+    }
     const labels = (await data).getAll("labels") as string[];
     const mapData = new Map<string, File[]>();
     for (const label of labels) {
@@ -39,4 +47,3 @@ export async function POST(req: NextRequest) {
         return NextResponse.error();
     }
 }
-
