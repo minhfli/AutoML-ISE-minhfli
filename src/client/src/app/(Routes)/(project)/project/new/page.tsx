@@ -10,6 +10,7 @@ import { toast } from 'sonner'
 import { useRouter } from 'next/navigation';
 
 type formSchemaType = {
+    email: string;
     name: string;
     task: string;
     modelsSearch: string;
@@ -46,6 +47,7 @@ export default function Index() {
     const router = useRouter();
 
     const form: formSchemaType = {
+        email: localStorage.getItem('userEmail') || '',
         name: '',
         task: 'Text Classification',
         modelsSearch: 'Automatic'
@@ -60,12 +62,17 @@ export default function Index() {
     async function onSubmit(form: formSchemaType) {
         try {
             const res = await axios.post("/api/project", {
+                email : form.email,
                 name : form.name,
                 task: form.task,
                 modelsSearch: form.modelsSearch,
             });
             console.log(res.status);
             if (res.status === 201) {
+                const { project_name, user_name } = res.data;
+                localStorage.setItem("project_name", project_name);
+                localStorage.setItem("user_name", user_name);
+
                 toast.success(JSON.stringify(form.name));
                 toast.success(JSON.stringify(form.task));
                 toast.success(JSON.stringify(form.modelsSearch));
