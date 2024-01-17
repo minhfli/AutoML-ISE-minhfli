@@ -21,7 +21,7 @@ class AutogluonTrainer(object):
             "problem_type": "classification",
         })
         self.fit_args = kwargs.setdefault("ag_fit_args", {
-            "time_limit": 30,
+            "time_limit": 60,
             "hyperparameters": {
                 "env.precision": "bf16-mixed",
                 "env.compile.turn_on": True,
@@ -73,5 +73,4 @@ class AutogluonTrainer(object):
             # Handle any other unexpected exceptions.
             # It's often a good idea to log the exception details here for later debugging.
 
-    async def evaluate_async(self, predictor: MultiModalPredictor, test_data_path: Path) -> Optional[float]:
-        return await asyncio.to_thread(self.evaluate, predictor, test_data_path)
+   

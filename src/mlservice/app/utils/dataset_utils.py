@@ -1,8 +1,10 @@
 import os
 from pathlib import Path
+from platformdirs import user_music_dir
 import splitfolders
 import shutil
-
+import glob
+from typing import Union
 
 def split_data(input_folder: Path, output_folder, ratio=(0.8, 0.1, 0.1), seed=1337, group_prefix=None, move=False):
     """
@@ -63,3 +65,30 @@ def create_folder(user_dataset_path: Path):
     if not folder_path.exists():
         folder_path.mkdir()
         print(f"Created {user_dataset_path}")
+
+
+def find_latest_model(user_model_path: str) -> Union[str, None]:
+    """_summary_
+
+    Args:
+        user_model_path (str): _description_
+
+    Returns:
+        Union[str, None]: _description_
+    """
+    pattern = os.path.join(user_model_path, '**', '*.ckpt')
+    list_of_files = glob.glob(pattern,recursive=True)
+    return max(list_of_files, key=os.path.getctime) if list_of_files else None
+
+def write_image_to_temp_file(image, temp_image_path):
+    with open(temp_image_path, "wb") as buffer:
+        buffer.write(image)
+
+
+def model_size(user_model_path):
+    pattern = os.path.join(user_model_path, '**', '*.ckpt')
+    list_of_files = glob.glob(pattern,recursive=True)
+    model_size = 0
+    for file in list_of_files:
+        model_size += os.path.getsize(file)
+    return model_size

@@ -7,7 +7,9 @@ from autogluon.multimodal import MultiModalPredictor
 class AutogluonPredictor:
     def __init__(self, model_path: Path):
         self.model_path = model_path
-        self.predictor: MultiModalPredictor = MultiModalPredictor()
+        self.predictor: MultiModalPredictor = MultiModalPredictor(
+            problem_type = "classification",    
+        )
         self._logger = logging.getLogger(__name__)
         self._logger.setLevel(logging.INFO)
         self.load_model()
@@ -34,3 +36,4 @@ class AutogluonPredictor:
         except Exception as e:
             self._logger.error(f"Error during prediction: {e}")
             return None
+

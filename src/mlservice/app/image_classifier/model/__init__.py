@@ -1,3 +1,5 @@
+from fastapi import FastAPI, File, UploadFile
+from nptyping import Byte
 from pydantic import BaseModel
 from pydantic.fields import Field
 
@@ -20,8 +22,8 @@ class TrainingRequest(BaseModel):
         "ag_fit_args": {
             "time_limit": 60,
             "hyperparameters": {
-                "env.per_gpu_batch_size": 128,
-                "env.batch_size": 128
+                "env.per_gpu_batch_size": 4,
+                "env.batch_size": 4
             }
         }
     }, title="Training arguments.")
