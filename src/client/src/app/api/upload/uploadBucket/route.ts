@@ -6,12 +6,11 @@ import { storage } from "@/config/config";
 export async function POST(req: NextRequest) {
     console.log("POST /api/upload");
     const data = req.formData();
-    // TODO : Lấy user_name và project_name từ req @DuongNam
     // const user_name = "lexuanan18102004"
     // const project_name = "flower-classifier"
     const user_name = (await data).get("user_name") as string;
     const project_name = (await data).get("project_name") as string;
-
+    console.log(user_name); console.log(project_name);
     const bucketName = `${user_name}`;
     const exists = await storage.bucket(bucketName).exists();
     if (!exists[0]) {
@@ -41,7 +40,10 @@ export async function POST(req: NextRequest) {
         }
         const zipContent = await zip.generateAsync({ type: "nodebuffer" });
         await storage.bucket(user_name).file(destinationFileName).save(zipContent);
-        return NextResponse.json({ success: true });
+        console.log("Status sucess")
+        return NextResponse.json({ success: true }, {
+            status: 200,
+        });
     } catch (error) {
         console.log(error);
         return NextResponse.error();
