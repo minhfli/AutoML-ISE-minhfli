@@ -10,7 +10,7 @@ def split_data(input_folder: Path, output_folder, ratio=(0.8, 0.1, 0.1), seed=13
 
     Parameters:
     input_folder (str): Path to the dataset folder.
-    output_folder (str): Path where the split datasets will be saved.
+    output_folder (str): Path where the split available_checkpoint will be saved.
     ratio (tuple): A tuple representing the ratio to split (train, val, test).
     seed (int): Random seed for reproducibility.
     group_prefix (int or None): Prefix of group name to split files into different groups.
@@ -51,7 +51,7 @@ def remove_folders_except(user_dataset_path: Path, keep_folder: str):
             print(f"Removed {item.name}")
 
 
-def create_folder(user_dataset_path: Path, folder_name: str):
+def create_folder(user_dataset_path: Path):
     """
     Creates a folder in the user's dataset directory.
 
@@ -59,7 +59,7 @@ def create_folder(user_dataset_path: Path, folder_name: str):
         user_dataset_path (Path): The path to the user's dataset directory.
         folder_name (str): The name of the folder to create.
     """
-    folder_path = user_dataset_path / folder_name
+    folder_path = user_dataset_path
     if not folder_path.exists():
         folder_path.mkdir()
-        print(f"Created {folder_name}")
+        print(f"Created {user_dataset_path}")
