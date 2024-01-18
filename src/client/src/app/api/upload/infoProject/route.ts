@@ -1,22 +1,17 @@
-import { NextRequest, NextResponse } from 'next/server';
+import config from "@/config/config";
 import axios from "axios";
-import config from '@/config/config';
+import { NextRequest, NextResponse } from "next/server";
 
 export async function POST(req: NextRequest) {
     try {
         const body = await req.json();
-
         console.log(body);
-
-        const response = await axios.post(`${config.backendURL}/project/createProject`, body);
+        const response = await axios.post(`${config.backendURL}/project/upload/infoProject`, body);
         console.log(response.status);
 
-        if (response.status === 201) {
+        if (response.status === 200) {
             return new NextResponse(JSON.stringify(response.data), {
-                status: 201,
-                headers: {
-                    'Content-Type': 'application/json'
-                }
+                status: 200,
             });
         }
         return new NextResponse(JSON.stringify({ error: response.data }), {
@@ -25,8 +20,7 @@ export async function POST(req: NextRequest) {
                 'Content-Type': 'application/json'
             }
         });
-
-    } catch (error: any) {
+    } catch (error : any) {
         console.error('Error during POST request:', error);
         return new NextResponse(JSON.stringify({ error: error.message }), {
             status: 400,
@@ -35,4 +29,5 @@ export async function POST(req: NextRequest) {
             }
         });
     }
+
 }

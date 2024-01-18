@@ -1,4 +1,5 @@
 "use client";
+import React from "react";
 import { Button } from "@/src/components/ui/button";
 import { Input } from "@/src/components/ui/input";
 import { Label } from "@/src/components/ui/label";
@@ -14,64 +15,47 @@ type formSchemaType = {
     name: string;
     task: string;
     modelsSearch: string;
+    training_time: string;
 };
-
-
-async function testSubmit(form: formSchemaType) {
-    try {
-        const res = await axios.post("/api/project", {
-            name : form.name,
-            task: form.task,
-            modelsSearch: form.modelsSearch,
-        });
-        console.log(res.status);
-        if (res.status === 200) {
-            toast.success(JSON.stringify(form.name));
-            toast.success(JSON.stringify(form.task));
-            toast.success(JSON.stringify(form.modelsSearch));
-            toast.success('Project created successfully.');
-        } else {
-            toast.error('Something went wrong.');
-        }
-    } catch (error: any) {
-        toast.error(JSON.stringify(error.message));
-
-        // setFeedback('Failed to submit. Please try again later.');
-    } finally {
-        // setSubmitting(false);
-    }
-}
-
 
 export default function Index() {
     const router = useRouter();
 
-    const form: formSchemaType = {
+    const [form, setForm] = React.useState<formSchemaType>({
         email: localStorage.getItem('userEmail') || '',
         name: '',
         task: 'Text Classification',
-        modelsSearch: 'Automatic'
-    };
+        modelsSearch: 'Automatic',
+        training_time: '60'
+    });
+
 
     const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         event.preventDefault();
-        form.name = event.target.value; // ko hieu sao lai bug nen danh phai lam nhu nay
+        // form.name = event.target.value; // ko hieu sao lai bug nen danh phai lam nhu nay
+        setForm((prevForm) => ({
+            ...prevForm,
+            [event.target.id]: event.target.value,
+        }))
     };
 
 
     async function onSubmit(form: formSchemaType) {
         try {
             const res = await axios.post("/api/project", {
-                email : form.email,
-                name : form.name,
+                email: form.email,
+                name: form.name,
                 task: form.task,
                 modelsSearch: form.modelsSearch,
+                training_time: form.training_time,
             });
             console.log(res.status);
             if (res.status === 201) {
                 const { project_name, user_name } = res.data;
                 localStorage.setItem("project_name", project_name);
                 localStorage.setItem("user_name", user_name);
+                localStorage.setItem("training_time", form.training_time);
+                localStorage.setItem("task", form.task);
 
                 toast.success(JSON.stringify(form.name));
                 toast.success(JSON.stringify(form.task));
@@ -132,6 +116,18 @@ export default function Index() {
                                     />
 
                                 </div>
+                                <div className="flex flex-col space-y-1.75">
+                                    <Label htmlFor="training_time">Training time</Label>
+                                    <Input id="training_time"
+                                        type="number"
+                                        placeholder="Enter your training time you expected (s)"
+                                        autoComplete="off"
+                                        spellCheck={false}
+                                        onChange={handleInputChange}
+                                        required={true}
+                                    />
+
+                                </div>
                                 <div className="flex flex-col space-y-1.5">
                                     <Label htmlFor="task">Task</Label>
                                     <Select onValueChange={
@@ -149,8 +145,8 @@ export default function Index() {
                                         <SelectContent className="max-h-60 overflow-y-auto" position="popper">
                                             <SelectGroup>
                                                 <SelectItem value="Text Classification">Text Classification</SelectItem>
-                                                <SelectItem value="Image classfication">Image Classification</SelectItem>
-                                                <SelectItem value="Object detection">Object Detection</SelectItem>
+                                                <SelectItem value="Image Classfication">Image Classification</SelectItem>
+                                                <SelectItem value="Object Detection">Object Detection</SelectItem>
                                                 <SelectItem value="Tabular Data Classification (Multi-class)">Tabular Data Classification (Multi-class)</SelectItem>
                                                 <SelectItem value="Text Generation">Text Generation</SelectItem>
                                                 <SelectItem value="Question Answering">Question Answering</SelectItem>

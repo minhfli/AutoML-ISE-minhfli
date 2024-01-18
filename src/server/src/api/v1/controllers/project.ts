@@ -1,10 +1,10 @@
 import { Request, Response } from "express"
-import { ProjectRequest, ProjectServices } from "../services/project"
+import { ProjectInfoRequest, ProjectRequest, ProjectServices } from "../services/project"
 
 const createProject = async (req: Request, res: Response) => {
-    let { email, name, task, modelsSearch } = req.body as ProjectRequest;
+    let { email, name, task, modelsSearch, training_time } = req.body as ProjectRequest;
     try {
-        const project = await ProjectServices.createProject({ email, name, task, modelsSearch });
+        const project = await ProjectServices.createProject({ email, name, task, modelsSearch, training_time });
         console.log(project);
         if (project) {
             res.status(201).json({
@@ -25,6 +25,31 @@ const createProject = async (req: Request, res: Response) => {
     }
 }
 
+const infoProject = async (req: Request, res: Response) => {
+    let { user_name, project_name} = req.body as ProjectInfoRequest;
+
+    try {
+        const response = await ProjectServices.sendDataToMLService({ user_name, project_name});
+
+        if (response) {
+
+            res.status(200).json({
+                message: "Send info project successfully",
+            });
+        } else {
+            res.status(400).json({
+                message: "An unexpected error occurred.",
+            });
+        }
+    } catch (error: any) {
+        console.error('Project get info failed:', error);
+        res.status(500).json({
+            message: "An unexpected error occurred.",
+        });
+    }
+}
+
 export const ProjectController = {
     createProject,
+    infoProject,
 }

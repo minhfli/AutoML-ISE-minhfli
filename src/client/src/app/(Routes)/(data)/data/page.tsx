@@ -3,6 +3,7 @@ import React, { ChangeEvent, useEffect, useRef } from 'react';
 import ModalUploadFile from './ModalUploadFile';
 import Axios from "axios";
 import { toast } from 'sonner';
+import { useRouter } from 'next/navigation';
 
 interface ImageObject {
     name: string;
@@ -29,6 +30,7 @@ export default function App() {
         images: [],
     });
     const form = new FormData();
+    const router = useRouter();
 
     const [formDataInfo, setFormDataInfo] = React.useState<FormDataInfo[]>([]);
 
@@ -107,6 +109,9 @@ export default function App() {
     const submitModal = async () => {
         const user_name = localStorage.getItem("user_name") as string;
         const project_name = localStorage.getItem("project_name") as string;
+        const training_time = localStorage.getItem("training_time") as string;
+        const task = localStorage.getItem("task") as string;
+
         form.append('user_name', user_name);
         form.append('project_name', project_name);
 
@@ -118,17 +123,34 @@ export default function App() {
         labels.forEach((label) => {
             form.append('labels', label);
         });
-        const res = await Axios.post('/api/upload', form, {
-            headers: {
-                'Content-Type': 'multipart/form-data',
-            },
+        // const res = await Axios.post('/api/upload/uploadBucket', form, {
+        //     headers: {
+        //         'Content-Type': 'multipart/form-data',
+        //     },
+        // });
+        // if (res.status === 200) {
+        //     toast.success('Upload thành công');
+        // }
+        // else {
+        //     toast.error('Upload thất bại');
+        // }
+
+        const resSendData = await Axios.post('/api/upload/infoProject', {
+            user_name: user_name,
+            project_name: project_name,
+            training_time: training_time,
+            task: task,
         });
-        if (res.status === 200) {
-            toast.success('Upload thành công');
+        if (resSendData.status === 200) {
+            toast.success('Send data thành công');
         }
         else {
-            toast.error('Upload thất bại');
+            toast.error('Send data thất bại');
         }
+
+        // if (res.status == 200) {
+        //     router.push('/training');
+        // }
     }
     useEffect(() => {
         console.log(`Progress changed: ${progress}%`);

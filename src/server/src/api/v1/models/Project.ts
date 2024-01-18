@@ -18,6 +18,11 @@ export class Project {
     @Column()
     description: string
 
+    @Column({
+        default: "60"
+    })
+    training_time: string
+
     @Index()
     @Column({
         type: "enum",
