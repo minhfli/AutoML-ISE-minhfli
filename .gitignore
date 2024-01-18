@@ -66,3 +66,6 @@ src/server/.pnp.loader.mjs
 src/client/.yarn/install-state.gz
 src/server/.gitattributes
 src/server/.editorconfig
+src/service-account-gcs.json
+src/client/package-lock.json
+src/server/package-lock.json
