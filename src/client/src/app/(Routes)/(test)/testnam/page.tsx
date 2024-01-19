@@ -41,7 +41,8 @@ export default function Page() {
         }
     }
 
-    const handlePredict = async () => {
+    const handlePredict = async (e: React.FormEvent) => {
+        e.preventDefault();
         if (!file) {
             toast.error("Please select an image before predicting.");
             return;
@@ -64,7 +65,6 @@ export default function Page() {
             const { status, message, load_time, inference_time, predictions } = res.data;
 
             if (status === "success") {
-                toast.success(message);
                 toast.success(`Load Time: ${load_time}`);
                 toast.success(`Inference Time: ${inference_time}`);
                 toast.success(`Predictions: ${predictions}`);

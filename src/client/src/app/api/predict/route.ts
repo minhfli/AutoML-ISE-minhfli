@@ -21,11 +21,10 @@ export async function POST(req: NextRequest) {
                 'Content-Type': 'multipart/form-data',
             },
         });
-        console.log(response.status);
+        console.log(response.data);
 
         if (response.status === 200) {
-            console.log("hehe");
-            return new NextResponse(response.data, {
+            return new NextResponse(JSON.stringify(response.data), {
                 status: 200,
             });
         }
