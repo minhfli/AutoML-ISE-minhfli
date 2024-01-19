@@ -4,6 +4,7 @@ import { ProjectController } from "../../../controllers/project";
 const projectRouter = Router();
 
 projectRouter.use("/createProject", ProjectController.createProject);
-projectRouter.use("/upload/infoProject", ProjectController.infoProject);
+projectRouter.use("/upload/trainProject", ProjectController.trainProject);
+projectRouter.use("/predict", ProjectController.predictProject);
 
 export default projectRouter;
