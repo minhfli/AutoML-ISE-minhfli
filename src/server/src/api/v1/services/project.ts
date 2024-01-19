@@ -78,15 +78,18 @@ const createProject = async (req: ProjectRequest): Promise<Project | null> => {
 
 }
 
-const sendDataToMLService = async (req : ProjectInfoRequest) => {
+const sendDataToMLService = async (req: ProjectInfoRequest) => {
     try {
         const response = await axios.post(`${config.mlURL}/api/image_classifier/train`, {
             username: req.user_name,
             project_name: req.project_name,
         });
-        console.log("respone from ml here " + response.status);
         const result = response.data;
-
+        if (result.status === "success") {
+            console.log("Accuracy:", result.accuracy);
+            console.log("Time:", result.time);
+            console.log("Download Time:", result.download_time);
+        }
         return result;
     } catch (error) {
         console.error('Error communicating with ML service:', error);
