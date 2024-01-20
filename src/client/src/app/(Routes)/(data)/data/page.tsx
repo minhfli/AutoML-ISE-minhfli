@@ -5,6 +5,7 @@ import Axios from "axios";
 import { toast } from "sonner";
 import { Progress } from "@/src/components/ui/progress";
 import { set } from "react-hook-form";
+import { useRouter } from "next/navigation";
 
 interface ImageObject {
   name: string;
@@ -33,6 +34,7 @@ export default function App() {
     images: [],
   });
   const form = new FormData();
+  const route = useRouter();
 
   const [formDataInfo, setFormDataInfo] = React.useState<FormDataInfo[]>([]);
 
@@ -120,8 +122,8 @@ export default function App() {
       }
       setIsUploading(true);
     }
-    
-    
+
+
   };
   const closeModal = () => {
     setProgress(0);
@@ -142,13 +144,14 @@ export default function App() {
     labels.forEach((label) => {
       form.append("labels", label);
     });
-    const res = await Axios.post("/api/upload", form, {
+    const res = await Axios.post("/api/upload/uploadBucket", form, {
       headers: {
         "Content-Type": "multipart/form-data",
       },
     });
     if (res.status === 200) {
       toast.success("Upload thành công");
+      route.push("/testnam");
     } else {
       toast.error("Upload thất bại");
     }

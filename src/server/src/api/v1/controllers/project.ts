@@ -25,16 +25,17 @@ const createProject = async (req: Request, res: Response) => {
     }
 }
 
-const infoProject = async (req: Request, res: Response) => {
+const trainProject = async (req: Request, res: Response) => {
     let { user_name, project_name} = req.body as ProjectInfoRequest;
-
     try {
         const response = await ProjectServices.sendDataToMLService({ user_name, project_name});
 
         if (response) {
-
             res.status(200).json({
-                message: "Send info project successfully",
+                message: "Train project successfully",
+                accuracy: response.accuracy,
+                time: response.time,
+                download_time: response.download_time,
             });
         } else {
             res.status(400).json({
@@ -49,7 +50,19 @@ const infoProject = async (req: Request, res: Response) => {
     }
 }
 
+const predictProject = async(req: Request, res: Response) => {
+    try {
+
+    } catch (error : any) {
+        console.error('Project predict failed:', error);
+        res.status(500).json({
+            message: "An unexpected error occurred.",
+        });
+    }
+}
+
 export const ProjectController = {
     createProject,
-    infoProject,
+    trainProject,
+    predictProject,
 }
