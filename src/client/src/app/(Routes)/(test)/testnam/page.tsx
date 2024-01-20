@@ -2,6 +2,7 @@
 import { Button } from "@/src/components/ui/button";
 import { Input } from "@/src/components/ui/input";
 import Axios from "axios";
+import { useRouter } from "next/navigation";
 import React, { HtmlHTMLAttributes, useEffect, useState } from "react";
 import { toast } from "sonner";
 
@@ -21,7 +22,7 @@ export default function Page() {
             setFile(e.target.files[0]);
         }
     };
-
+    const router = useRouter();
     const handleTrain = async () => {
         const user_name = localStorage.getItem("user_name") as string;
         const project_name = localStorage.getItem("project_name") as string;
@@ -31,11 +32,13 @@ export default function Page() {
             user_name: user_name,
             project_name: project_name,
         })
-        console.log(res.data.accuracy);
-        console.log(res.data.time);
-        console.log(res.data.download_time);
+        const { accuracy, time, download_time } = res.data;
+        toast.success(accuracy.accuracy);
+        toast.success(time);
+        toast.success(download_time);
         if (res.status === 200) {
             toast.success("Train thành công!");
+            router.push("/predict");
         } else {
             toast.error("Train thất bại :(");
         }

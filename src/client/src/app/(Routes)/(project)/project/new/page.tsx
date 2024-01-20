@@ -145,7 +145,7 @@ export default function Index() {
                                         <SelectContent className="max-h-60 overflow-y-auto" position="popper">
                                             <SelectGroup>
                                                 <SelectItem value="Text Classification">Text Classification</SelectItem>
-                                                <SelectItem value="Image Classfication">Image Classification</SelectItem>
+                                                <SelectItem value="Image Classification">Image Classification</SelectItem>
                                                 <SelectItem value="Object Detection">Object Detection</SelectItem>
                                                 <SelectItem value="Tabular Data Classification (Multi-class)">Tabular Data Classification (Multi-class)</SelectItem>
                                                 <SelectItem value="Text Generation">Text Generation</SelectItem>

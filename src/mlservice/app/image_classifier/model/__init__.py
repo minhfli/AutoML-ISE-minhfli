@@ -16,7 +16,7 @@ class TrainingRequest(BaseModel):
         "ag_model_args": {
             "pretrained": True,
             "hyperparameters": {
-                "model.timm_image.checkpoint_name": Timm_Checkpoint.swin_small_patch4_window7_224,
+                "model.timm_image.checkpoint_name": Timm_Checkpoint.swin_small_patch4_window7_224.value,
             }
         },
         "ag_fit_args": {

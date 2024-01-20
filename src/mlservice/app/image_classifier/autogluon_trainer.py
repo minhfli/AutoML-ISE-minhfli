@@ -31,6 +31,7 @@ class AutogluonTrainer(object):
                 "optimization.efficient_finetune": "lora"
             }
         })
+    
 
     def train(self, train_data_path: Path, val_data_path: Path, model_path: Path) -> Union[MultiModalPredictor, None]:
         try:
