@@ -1,5 +1,57 @@
-import React from "react";
+"use client";
+import Axios from "axios";
+import { Loader } from "lucide-react";
+import React, { ChangeEvent, useState } from "react";
+import { toast } from "sonner";
+
 export default function Predict() {
+  const [uploadedFile, setUploadedFile] = useState<File | null>(null);
+  const [previewImage, setPreviewImage] = useState<string | undefined>(undefined);
+  const [loading, setLoading] = useState<boolean>(false);
+  const [predictions, setPredictions] = useState<string>("");
+
+  const handleFileChange = async (e: ChangeEvent<HTMLInputElement>) => {
+    e.preventDefault();
+    console.log("File selected");
+    if (e.target.files && e.target.files.length > 0) {
+      const file = e.target.files[0];
+      setUploadedFile(file);
+      const reader = new FileReader();
+      reader.onload = () => {
+        setPreviewImage(reader.result as string);
+      }
+      reader.readAsDataURL(file);
+
+      const user_name = localStorage.getItem("user_name") as string;
+      const project_name = localStorage.getItem("project_name") as string;
+
+      const formData = new FormData();
+      formData.append("user_name", user_name);
+      formData.append("project_name", project_name);
+      formData.append("image", file);
+
+      try {
+        setLoading(true);
+        const res = await Axios.post('api/predict', formData, {
+          headers: {
+            'Content-Type': 'multipart/form-data',
+          },
+        });
+        const { status, load_time, inference_time, predictions } = res.data;
+
+        if (status == "success") {
+          setPredictions(predictions);
+        } else {
+          toast.error("Please try again!");
+        }
+      } catch (error) {
+        console.error("Error during prediction:", error);
+      } finally {
+        setLoading(false);
+      }
+    }
+
+  };
   return (
     <div className="flex flex-col  items-center justify-center rounded-lg bg-white p-4 shadow">
       {/* Model Switcher and Info Section */}
@@ -37,18 +89,18 @@ export default function Predict() {
 
           {/* <!-- Center Section - Validation Accuracy --> */}
           <div className="flex justify-end items-center space-x-2">
-  <div className="flex items-center space-x-1">
-    <div className="bg-purple-600 w-1 h-6 rounded-sm"></div>
-    <div className="flex flex-col">
-      <div className="flex items-center text-sm font-semibold text-purple-600">
-        <span>Validation Accuracy</span>
-        
-      </div>
-      <span className="text-sm font-semibold text-purple-600">97.9%</span>
-    </div>
-  </div>
-  <a href="#" className="text-xs text-purple-600 hover:text-purple-800">View Model Graphs →</a>
-</div>
+            <div className="flex items-center space-x-1">
+              <div className="bg-purple-600 w-1 h-6 rounded-sm"></div>
+              <div className="flex flex-col">
+                <div className="flex items-center text-sm font-semibold text-purple-600">
+                  <span>Validation Accuracy</span>
+
+                </div>
+                <span className="text-sm font-semibold text-purple-600">97.9%</span>
+              </div>
+            </div>
+            <a href="#" className="text-xs text-purple-600 hover:text-purple-800">View Model Graphs →</a>
+          </div>
         </div>
       </div>
 
@@ -83,9 +135,19 @@ export default function Predict() {
               Upload Image
             </label>
             <div className="mb-2 ml-2 mr-2 mt-2 rounded-lg border-2 border-dashed border-gray-300 p-4 text-center">
-              <button className="rounded bg-gray-100 p-2 text-sm">
-                Select File
-              </button>
+              <input
+                type="file"
+                onChange={handleFileChange}
+                accept="image/*"
+                className="hidden"
+                id="upload"
+              />
+
+              <label htmlFor="upload" className="cursor-pointer">
+                <div className="rounded bg-gray-100 p-2 text-sm">
+                  Select File
+                </div>
+              </label>
               <p className="mt-2 text-xs text-gray-500">Drop files here or</p>
             </div>
           </div>
@@ -104,13 +166,20 @@ export default function Predict() {
 
         {/* <!-- Second Column --> */}
         <div className="flex w-1/2 justify-center ">
-          <img
-            src="flower.jpg"
-            className="rounded-lg border-2 border-gray-300"
-            style={{ width: "600px", height: "auto" }}
-          >
-            {/* <!-- Replace with actual image --> */}
-          </img>
+          {loading ? (
+            <div className="flex items-center justify-center w-full h-full">
+              <Loader></Loader>
+            </div>
+          ) : (
+            previewImage && (
+              <img
+                src={previewImage}
+                alt="Selected"
+                className="rounded-lg border-2 border-gray-300"
+                style={{ width: "auto", height: "auto" }}
+              />
+            )
+          )}
         </div>
 
         {/* <!-- Third Column --> */}
@@ -137,6 +206,13 @@ export default function Predict() {
             </label>
             <div className="rounded-lg border-2 border-gray-300 p-4">
               {/* <pre className="text-xs">{"predictions": [{"className": "dandelion", "className_id": 3, "confidence": 0.944}]}</pre> */}
+              {predictions.length > 0 && (
+                <ul>
+                  <li>
+                    <span className="font-semibold">{predictions}</span>
+                  </li>
+                </ul>
+              )}
             </div>
           </div>
         </div>

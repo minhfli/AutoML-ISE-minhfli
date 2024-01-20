@@ -22,7 +22,8 @@ export async function POST(req: NextRequest) {
             },
         });
         console.log(response.data);
-
+        const result = response.data;
+        console.log(typeof result.predictions);
         if (response.status === 200) {
             return new NextResponse(JSON.stringify(response.data), {
                 status: 200,
