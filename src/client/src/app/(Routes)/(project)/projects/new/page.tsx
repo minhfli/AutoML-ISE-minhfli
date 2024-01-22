@@ -1,4 +1,4 @@
-"use client";
+"use client"
 import React from "react";
 import {Button} from "@/src/components/ui/button";
 import {Input} from "@/src/components/ui/input";
@@ -9,6 +9,7 @@ import {Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectVal
 import {toast} from 'sonner'
 import {useRouter} from 'next/navigation';
 import httpStatusCode from "@/src/app/errors/httpStatusCode";
+import {useEffect} from "react";
 
 type formSchemaType = {
     email: string;
@@ -22,13 +23,22 @@ export default function Index() {
     const router = useRouter();
 
     const [form, setForm] = React.useState<formSchemaType>({
-        email: localStorage.getItem('userEmail') || '',
+        email:'',
         name: '',
         description: '',
         task: 'Image Classification',
         training_time: '60'
     });
-
+    useEffect(() => {
+        // Access localStorage only on the client side
+        if (typeof window !== "undefined") {
+            const userEmail = localStorage.getItem('userEmail') || '';
+            setForm(prevForm => ({
+                ...prevForm,
+                email: userEmail
+            }));
+        }
+    }, []);
 
     const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         event.preventDefault();
@@ -71,9 +81,9 @@ export default function Index() {
         }
     }
     //Perform localStorage action
-    useEffect(() => {
-        localStorage.setItem('userEmail', form.email);
-    },[form.email])
+    
+    
+
 
     //
     // useEffect(() => {
