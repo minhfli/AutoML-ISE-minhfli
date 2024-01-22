@@ -8,15 +8,15 @@ from app.image_classifier.available_checkpoint import Timm_Checkpoint
 
 class TrainingRequest(BaseModel):
     # Mỗi user là 1 bucket riêng trong GCS
-    username: str = Field(default="lexuanan18102004", title="Username to get the bucket => Have to be unique")
-    project_name: str = Field(default="flower-classifier", title="Project name")
-    training_argument: dict = Field(default=
+    userEmail: str = Field(default="lexuanan18102004", title="userEmail but loai bo @ to get the bucket => Have to be unique")
+    projectName: str = Field(default="flower-classifier", title="Project name")
+    training_argument: dict = Field(default =
     {
         "data_args": {},
         "ag_model_args": {
             "pretrained": True,
             "hyperparameters": {
-                "model.timm_image.checkpoint_name": Timm_Checkpoint.swin_small_patch4_window7_224.value,
+                "model.timm_image.checkpoint_name": Timm_Checkpoint.swin_small_patch4_window7_224,
             }
         },
         "ag_fit_args": {
