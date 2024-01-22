@@ -6,7 +6,6 @@ import { Input } from "@/src/components/ui/input"
 import {
     Form,
     FormControl,
-    FormDescription,
     FormField,
     FormItem,
     FormLabel,
@@ -17,7 +16,7 @@ import { toast } from "sonner"
 import axios from "axios"
 import { useRouter } from "next/navigation"
 import { setCookie, getCookie } from 'cookies-next';
-import useLocalStorage from "@/src/hooks/use-local-storage"
+import httpStatusCode from "@/src/app/errors/httpStatusCode";
 
 const formSchema = z.object({
     email: z.string().min(2, {
@@ -47,23 +46,22 @@ export default function ProfileForm() {
         };
         localStorage.setItem('userEmail', form.getValues('email'));
         setCookie('accessToken', accessToken, cookieOptions);
-        console.log("Cookie: " + getCookie('accessToken', cookieOptions));
     };
 
     async function onSubmit(values: z.infer<typeof formSchema>) {
         try {
-            console.log(values.password);
             const result = await axios.post("/api/login", {
                 email: values.email,
                 password: values.password,
             });
 
-            if (result.status >= 200 && result.status < 300) {
+            if (result.status === httpStatusCode.OK) {
                 toast.success("Login successful!");
                 writeCookies({
                     accessToken: result.data.access_token
                 });
-                router.push('/project');
+                router.push('/projects');
+                toast.dismiss();
             } else {
                 toast.error("Login failed! Check your form");
             }

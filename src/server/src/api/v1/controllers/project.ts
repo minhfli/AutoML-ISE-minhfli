@@ -1,68 +1,98 @@
-import { Request, Response } from "express"
-import { ProjectInfoRequest, ProjectRequest, ProjectServices } from "../services/project"
+import {Request, Response} from "express"
+import {ProjectTrainRequest, ProjectRequest, ProjectServices, ProjectPredictRequest} from "../services/project"
+import httpStatusCodes from "../errors/httpStatusCodes";
 
 const createProject = async (req: Request, res: Response) => {
-    let { email, name, task, modelsSearch, training_time } = req.body as ProjectRequest;
+    let {email, name, task, training_time, description} = req.body as ProjectRequest;
     try {
-        const project = await ProjectServices.createProject({ email, name, task, modelsSearch, training_time });
-        console.log(project);
+        const project = await ProjectServices.createProject({email, name, task, training_time, description});
         if (project) {
-            res.status(201).json({
-                message: "Project created successfully",
+            res.status(httpStatusCodes.CREATED).json({
                 project_name: project.name,
-                user_name: project.user.name,
+                project_id: project.id,
             });
         } else {
-            res.status(400).json({
+            res.status(httpStatusCodes.BAD_REQUEST).json({
                 message: "Project could not be created, please check the provided data.",
             });
         }
     } catch (error: any) {
         console.error('Project creation failed:', error);
-        res.status(500).json({
+        res.status(httpStatusCodes.INTERNAL_SERVER_ERROR).json({
             message: "An unexpected error occurred.",
         });
     }
 }
 
 const trainProject = async (req: Request, res: Response) => {
-    let { user_name, project_name} = req.body as ProjectInfoRequest;
+    let {userEmail, projectId} = req.body as ProjectTrainRequest;
     try {
-        const response = await ProjectServices.sendDataToMLService({ user_name, project_name});
+        const response = await ProjectServices.TrainImageClassifierProject({userEmail, projectId});
 
         if (response) {
-            res.status(200).json({
-                message: "Train project successfully",
-                accuracy: response.accuracy,
-                time: response.time,
-                download_time: response.download_time,
+            res.status(httpStatusCodes.OK).json({
+                validation_accuracy: response.validation_accuracy,
+                training_evaluation_time: response.training_evaluation_time,
             });
         } else {
-            res.status(400).json({
+            res.status(httpStatusCodes.BAD_REQUEST).json({
                 message: "An unexpected error occurred.",
             });
         }
     } catch (error: any) {
         console.error('Project get info failed:', error);
-        res.status(500).json({
+        res.status(httpStatusCodes.INTERNAL_SERVER_ERROR).json({
             message: "An unexpected error occurred.",
         });
     }
 }
 
-const predictProject = async(req: Request, res: Response) => {
+const predictProject = async (req: Request, res: Response) => {
     try {
-
-    } catch (error : any) {
+        const predictRequest = req.body as ProjectPredictRequest;
+        const response = await ProjectServices.predictProject(predictRequest);
+        if (response) {
+            res.status(httpStatusCodes.OK).json({
+                message: "Predict project successfully",
+                result: response.result,
+            });
+        } else {
+            res.status(httpStatusCodes.BAD_REQUEST).json({
+                message: "An unexpected error occurred.",
+            });
+        }
+    } catch (error: any) {
         console.error('Project predict failed:', error);
-        res.status(500).json({
+        res.status(httpStatusCodes.INTERNAL_SERVER_ERROR).json({
             message: "An unexpected error occurred.",
         });
     }
 }
+const getProjectById = async (req: Request, res: Response) => {
+    try {
+        const Id = req.params.projectId;
+        const project = await ProjectServices.GetProjectFromId(Id);
+        if (project) {
+            res.status(httpStatusCodes.OK).json({
+                message: "Get project successfully",
+                project: project,
+            });
+        } else {
+            res.status(httpStatusCodes.BAD_REQUEST).json({
+                message: "An unexpected error occurred.",
+            });
+        }
+    } catch (error: any) {
+        console.error('Project get info failed:', error);
+        res.status(httpStatusCodes.INTERNAL_SERVER_ERROR).json({
+            message: "An unexpected error occurred.",
+        });
+    }
 
+}
 export const ProjectController = {
     createProject,
     trainProject,
     predictProject,
+    getProjectById
 }

@@ -4,10 +4,8 @@ import { toast } from "sonner";
 
 export async function middleware(request: NextRequest) {
     const res = new NextResponse();
-    console.log("middleware ping");
     res.headers.set("x-middleware", "true");
     let access_token = request.cookies.get('accessToken');
-    console.log(access_token);
     if (access_token === undefined) {
         const redirectURL = new URL('/login', request.url);
         return NextResponse.redirect(redirectURL);
@@ -26,5 +24,5 @@ const verifyToken = (token: string, secretSignature: string): Promise<any> =>
     });
 
 export const config = {
-    matcher: '/project/:path*'
+    matcher: '/projects/:path*'
 }

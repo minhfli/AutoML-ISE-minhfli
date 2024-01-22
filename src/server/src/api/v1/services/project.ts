@@ -1,23 +1,31 @@
-import { Project, Task } from "../models";
-import { db } from "../db";
-import { User } from "../models";
+import {Project, Task, User} from "../models";
+import {db} from "../db";
 import config from "../../../config";
 import axios from "axios";
+import httpStatusCodes from "../errors/httpStatusCodes";
 
 export type ProjectRequest = {
     email: string;
     name: string;
     task: string;
-    modelsSearch: string;
+    description: string;
     training_time: string;
 };
 
-export type ProjectInfoRequest = {
-    user_name: string;
-    project_name: string;
-    // training_time: string;
-    // task: string;
-};
+export type ProjectTrainRequest = {
+    userEmail: string;
+    projectId: string;
+}
+
+
+// This is only for image classification.
+// TODO: Add support prediction for other tasks.
+export type ProjectPredictRequest = {
+    userEmail: string;
+    projectId: string;
+    image: File;
+}
+
 
 const convertStringTask = (task: string): Task => {
     switch (task) {
@@ -45,7 +53,7 @@ const convertStringTask = (task: string): Task => {
 };
 
 const createProject = async (req: ProjectRequest): Promise<Project | null> => {
-    let { email, name, task, modelsSearch, training_time } = req;
+    let {email, name, task, training_time, description} = req;
     try {
         console.log("email when create project: " + email)
         const user = await db.getRepository(User).findOne({
@@ -59,16 +67,13 @@ const createProject = async (req: ProjectRequest): Promise<Project | null> => {
         }
         const project = new Project();
         project.name = name;
+        project.description = description;
         project.task = convertStringTask(task);
-        project.description = modelsSearch;
         project.user = user;
-        project.training_time = training_time;
+        project.trainingTime = training_time;
 
-        user.projects = user.projects || [];
-        user.projects.push(project);
-
-        await db.getRepository(User).save(user);
         await db.getRepository(Project).save(project);
+
 
         return project;
     } catch (error: any) {
@@ -78,17 +83,25 @@ const createProject = async (req: ProjectRequest): Promise<Project | null> => {
 
 }
 
-const sendDataToMLService = async (req: ProjectInfoRequest) => {
+const TrainImageClassifierProject = async (req: ProjectTrainRequest) => {
     try {
+        const project = await GetProjectFromId(req.projectId);
+        if (!project) {
+            console.error('Project not found');
+            return null;
+        }
+        // convert email to -> without @ <=> bucket name
+        req.userEmail = req.userEmail.split('@')[0];
         const response = await axios.post(`${config.mlURL}/api/image_classifier/train`, {
-            username: req.user_name,
-            project_name: req.project_name,
+            userEmail: req.userEmail,
+            projectName: project.name,
         });
         const result = response.data;
-        if (result.status === "success") {
-            console.log("Accuracy:", result.accuracy);
-            console.log("Time:", result.time);
-            console.log("Download Time:", result.download_time);
+        if (response.status === httpStatusCodes.OK) {
+            console.log("Accuracy:", result.validation_accuracy);
+            console.log("Time:", result.training_evaluation_time);
+            project.validation_accuracy = result.validation_accuracy;
+            await db.getRepository(Project).save(project);
         }
         return result;
     } catch (error) {
@@ -97,7 +110,54 @@ const sendDataToMLService = async (req: ProjectInfoRequest) => {
     }
 }
 
+
+const predictProject = async (req: ProjectPredictRequest) => {
+    try {
+        if (req.image === undefined) {
+            console.log("image is undefined")
+            return null;
+        }
+        const project = await GetProjectFromId(req.projectId);
+        if (!project) {
+            console.error('Project not found');
+            return null;
+        }
+
+        const formData = new FormData();
+        formData.append('userEmail', req.userEmail.split('@')[0]);
+        formData.append("projectName", project.name);
+        formData.append("image", req.image, req.image.name);
+
+        const response = await axios.post(`${config.mlURL}/api/image_classifier/predict`, formData, {
+            headers: {
+                'Content-Type': 'multipart/form-data',
+            },
+        });
+        return response.data;
+    } catch (error) {
+        console.error('Error communicating with ML service:', error);
+        throw error;
+    }
+
+}
+
+const GetProjectFromId = async (id: string): Promise<Project | null> => {
+    try {
+        return await db.getRepository(Project).findOne({
+            where: {
+                id: id
+            }
+        });
+    } catch (error: any) {
+        console.log(error);
+        return null;
+    }
+
+}
+
 export const ProjectServices = {
     createProject,
-    sendDataToMLService,
+    TrainImageClassifierProject,
+    GetProjectFromId,
+    predictProject
 }

@@ -4,7 +4,7 @@ import Link from "next/link";
 const NewProjectCard: React.FC = () => {
   return (
     <Link
-      href="/project/new"
+      href="/projects/new"
       className="mx-auto w-full rounded-lg border border-gray-200 bg-white shadow-md hover:bg-gray-50"
     >
       <div className="flex h-full items-center justify-center p-4">
