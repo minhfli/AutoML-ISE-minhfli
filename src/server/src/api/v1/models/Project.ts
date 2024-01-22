@@ -15,13 +15,17 @@ export class Project {
     @Column()
     name: string
 
-    @Column()
+    @Column(
+        {
+            nullable : true
+        }
+    )
     description: string
 
     @Column({
         default: "60"
     })
-    training_time: string
+    trainingTime: string
 
     @Index()
     @Column({
@@ -49,4 +53,12 @@ export class Project {
     datasets: Dataset[]
 
 
+    // Tạm thời dể như này, cần phải thêm model version
+    // make a float column
+    @Column({
+        type: "float",
+        nullable: true,
+        default: 0
+    })
+    validation_accuracy: number
 }

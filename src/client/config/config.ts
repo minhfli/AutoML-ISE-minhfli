@@ -4,7 +4,7 @@ dotenv.config();
 
 
 
-const backendURL = process.env.BACKEND_URL || 'http://localhost:3000';
+const backendURL = process.env.BACKEND_URL || 'http://localhost:3456/api/v1';
 const gcpCredentials = process.env.GCP_CREDENTIALS || "../service-account-gcs.json"
 const accessTokenSecret = process.env.REFRESH_TOKEN_SECRET || "meowwwww"
 const refreshTokenSecret = process.env.REFRESH_TOKEN_SECRET || "linhxinhgai"

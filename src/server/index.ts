@@ -37,7 +37,7 @@ app.use(helmet())
 app.use(cookieParser())
 app.use(bodyParser.json({limit: '100mb'}))
 app.use(bodyParser.urlencoded({extended: true, limit: '100mb'}))
-app.use(multer().array('files'))
+app.use(multer().any())
 app.use(morgan('tiny'))
 
 
