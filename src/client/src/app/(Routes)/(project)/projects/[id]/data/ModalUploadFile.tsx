@@ -86,7 +86,7 @@ const ModalUploadFile: React.FC<ModalUploadFileProps> = ({
                     subfolder.images.slice(0, 6).map((image, imgIndex) => (
                       <div key={imgIndex} className="min-w-0">
                         <img
-                          className="h-24 object-cover" // Adjust 'h-24' to desired image height
+                          className="h-24 object-cover aspect-auto" // Adjust 'h-24' to desired image height
                           src={image.url}
                           alt={`Preview of ${subfolder.name} ${imgIndex + 1}`}
                         />

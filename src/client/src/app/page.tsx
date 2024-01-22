@@ -29,7 +29,7 @@ export default function Home() {
             title: "Projects",
             description:
                 "Explore what you can do with the platform with various task with NLP, Vision, Audio, Tabular and more!",
-            href: "/project",
+            href: "/projects",
         },
         {
             id: 4,

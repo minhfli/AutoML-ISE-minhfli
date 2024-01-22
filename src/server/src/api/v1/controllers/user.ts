@@ -3,14 +3,14 @@ import { Request, Response } from "express";
 import bcrypt from 'bcrypt';
 import { generateToken } from "../utils/jwt";
 import config from "../../../config";
+import httpStatusCodes from "../errors/httpStatusCodes";
 
 const createUser = async (req: Request, res: Response) => {
     try {
         let { username, email, password } = req.body as UserRequest;
         const existUser = await UserServices.findByEmail(email);
         if (existUser) {
-            // console.log(existUser);
-            res.status(200).json({
+            res.status(httpStatusCodes.CONFLICT).json({
                 message: "User already exists",
             });
         } else {
@@ -19,11 +19,11 @@ const createUser = async (req: Request, res: Response) => {
             const user = await UserServices.createUser({ username, email, password });
 
             if (user === true) {
-                res.status(201).json({
+                res.status(httpStatusCodes.CREATED).json({
                     message: "User created successfully",
                 });
             } else {
-                res.status(400).json({
+                res.status(httpStatusCodes.BAD_REQUEST).json({
                     message: "User could not be created, please check the provided data.",
                 });
             }
@@ -42,7 +42,7 @@ const checkLogin = async (req: Request, res: Response) => {
         const { email, password } = req.body as UserRequest;
         const user = await UserServices.findByEmail(email);
         if (user === null) {
-            res.status(404).json({
+            res.status(httpStatusCodes.NOT_FOUND).json({
                 message: "User not found",
             });
             return;
@@ -50,18 +50,18 @@ const checkLogin = async (req: Request, res: Response) => {
         const match = await bcrypt.compare(password, user.password);
         if (match) {
             const accessToken = await generateToken(user, config.accessTokenRequest) // default is 365 days
-            res.status(200).json({
+            res.status(httpStatusCodes.OK).json({
                 message: "User logged in successfully",
                 access_token: accessToken,
             });
         } else {
-            res.status(401).json({
+            res.status(httpStatusCodes.UNAUTHORIZED).json({
                 message: "Incorrect password",
             });
         }
     } catch (error: any) {
         console.error('User login failed:', error);
-        res.status(500).json({
+        res.status(httpStatusCodes.INTERNAL_SERVER_ERROR).json({
             message: "An unexpected error occurred.",
         });
     }
