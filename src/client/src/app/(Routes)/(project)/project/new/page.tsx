@@ -38,7 +38,7 @@ export default function Index() {
             [event.target.id]: event.target.value,
         }))
     };
-
+    
 
     async function onSubmit(form: formSchemaType) {
         try {
@@ -78,6 +78,10 @@ export default function Index() {
             // setSubmitting(false);
         }
     }
+    //Perform localStorage action
+    useEffect(() => {
+        localStorage.setItem('userEmail', form.email);
+    },[form.email])
 
 
 
