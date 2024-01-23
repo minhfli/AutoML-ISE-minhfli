@@ -54,7 +54,7 @@ export default function Predict() {
             try {
                 setLoading(true);
                 setPredictions("");
-                const res = await Axios.post('/api/predict', formData, {
+                const res = await Axios.post('/api/projects/ImageClassification/predict', formData, {
                     headers: {
                         'Content-Type': 'multipart/form-data'
                     }
@@ -242,7 +242,7 @@ export default function Predict() {
 
                 <div>
                     <Button className= "">
-                        <Link href={"/projects/" + projectId + "/deploy"}>Ready to deploy?</Link>
+                        <Link href={"/projects/" + projectId + "/ImageClassification/deploy"}>Ready to deploy?</Link>
                     </Button>
                 </div>
             </div>

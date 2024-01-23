@@ -6,7 +6,7 @@ import httpStatusCode from "@/src/app/errors/httpStatusCode";
 export async function POST(req: NextRequest) {
     try {
         const data = await req.json();
-        const response = await axios.post(`${config.backendURL}/projects/train`, data);
+        const response = await axios.post(`${config.backendURL}/projects/ImageClassification/train`, data);
         if (response.status === httpStatusCode.OK) {
             return new NextResponse(JSON.stringify(response.data), {
                 status: httpStatusCode.OK,
