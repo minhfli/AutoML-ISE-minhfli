@@ -29,6 +29,7 @@ const getAllProject = async (req: Request, res: Response) => {
         const projects = await ProjectServices.getAllProject();
         if (projects) {
             const response = projects.map(project => ({
+                id: project.id,
                 name: project.name,
                 description : project.description,
                 updated_at : project.time.updated_at,

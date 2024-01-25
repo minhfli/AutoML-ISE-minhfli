@@ -4,6 +4,7 @@ import Link from "next/link";
 import axios from "axios";
 import httpStatusCode from "@/src/app/errors/httpStatusCode";
 import { toast } from "sonner";
+import { useRouter } from "next/navigation";
 
 const NewProjectCard: React.FC = () => {
   return (
@@ -38,6 +39,7 @@ const NewProjectCard: React.FC = () => {
 
 // Define the type for the ProjectCard props
 type ProjectCardProps = {
+  id: string;
   name: string;
   status: "SUCCESS" | "ERRORS" | "IN PROGRESS"; // Enumerate possible statuses
   description: string;
@@ -46,6 +48,7 @@ type ProjectCardProps = {
 
 // Define the ProjectCard component with typed props
 const ProjectCard: React.FC<ProjectCardProps> = ({
+  id,
   name,
   status,
   description,
@@ -59,9 +62,23 @@ const ProjectCard: React.FC<ProjectCardProps> = ({
   };
 
   const statusColor = statusClasses[status];
+  const route = useRouter();
+
+  const handleCardClick = () => {
+    // khong hieu sao dung Link bi loi css
+    // them task field sau nay, default : ImageClassification
+    if (status === "IN PROGRESS") {
+      route.push(`/projects/${id}/ImageClassification/data`);
+    } else if (status === "SUCCESS") {
+      route.push(`/projects/${id}/ImageClassification/predict`);
+    }
+  };
 
   return (
-    <div className="mx-auto w-full rounded-lg border border-gray-200 bg-white text-center shadow-md hover:bg-gray-50">
+    <div
+      onClick={handleCardClick}
+      className="mx-auto w-full rounded-lg border border-gray-200 bg-white text-center shadow-md hover:bg-gray-50"
+    >
       <div className="p-5">
         <h5 className="text-lg font-bold tracking-tight text-gray-900">
           {name}
@@ -85,7 +102,7 @@ const ProjectCard: React.FC<ProjectCardProps> = ({
 // Define the type for the ProjectsGrid props
 type ProjectsGridProps = {
   projects: Array<{
-    id: number;
+    id: string;
     name: string;
     status: "SUCCESS" | "ERRORS" | "IN PROGRESS";
     description: string;
@@ -102,6 +119,7 @@ const ProjectsGrid: React.FC<ProjectsGridProps> = ({ projects }) => {
         {projects.map((project) => (
           <ProjectCard
             key={project.id}
+            id={project.id}
             name={project.name}
             status={project.status}
             description={project.description}
