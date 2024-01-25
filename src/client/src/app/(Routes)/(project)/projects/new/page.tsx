@@ -52,7 +52,7 @@ export default function Index() {
     async function onSubmit(form: formSchemaType) {
         try {
             toast.loading("Creating project...");
-            const res = await axios.post("/api/projects", {
+            const res = await axios.post("/api/projects/createProject", {
                 email: form.email,
                 name: form.name,
                 task: form.task,

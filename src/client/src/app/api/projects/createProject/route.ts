@@ -8,7 +8,7 @@ export async function POST(req: NextRequest) {
         const body = await req.json();
         console.log(body);
 
-        const response = await axios.post(`${config.backendURL}/projects/`, body);
+        const response = await axios.post(`${config.backendURL}/projects/createProject`, body);
 
         if (response.status === httpStatusCode.CREATED) {
             return new NextResponse(JSON.stringify(response.data), {

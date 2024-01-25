@@ -83,6 +83,21 @@ const createProject = async (req: ProjectRequest): Promise<Project | null> => {
 
 }
 
+const getAllProject = async (): Promise<Project[] | null> => {
+    try {
+        const projects = await db.getRepository(Project)
+            .createQueryBuilder('project')
+            .orderBy('project.time.updated_at', 'DESC')
+            .getMany();
+
+        console.log(projects);
+        return projects;
+    } catch (error: any) {
+        console.error("Error to get all data from project table");
+        throw error;
+    }
+};
+
 const TrainImageClassifierProject = async (req: ProjectTrainRequest) => {
     try {
         const project = await GetProjectFromId(req.projectId);
@@ -101,6 +116,7 @@ const TrainImageClassifierProject = async (req: ProjectTrainRequest) => {
             console.log("Accuracy:", result.validation_accuracy);
             console.log("Time:", result.training_evaluation_time);
             project.validation_accuracy = result.validation_accuracy;
+            project.status = "SUCCESS",
             await db.getRepository(Project).save(project);
         }
         return result;
@@ -157,6 +173,7 @@ const GetProjectFromId = async (id: string): Promise<Project | null> => {
 
 export const ProjectServices = {
     createProject,
+    getAllProject,
     TrainImageClassifierProject,
     GetProjectFromId,
     predictProject
