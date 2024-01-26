@@ -19,4 +19,5 @@ const config = {
     gcpCredentials,
     accessTokenRequest,
 };
+console.log(config)
 export default config
