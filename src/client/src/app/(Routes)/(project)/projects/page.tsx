@@ -140,14 +140,17 @@ const App: React.FC = () => {
   useEffect(() => {
     const getProjects = async () => {
       try {
-        const response = await axios.post("/api/projects/getAllProject");
+        const email = localStorage.getItem("userEmail");
+        const response = await axios.post("/api/projects/getAllProject", {
+          email: email,
+        });
         if (response.status === httpStatusCode.OK) {
           const projects = response.data;
           setProjectsData(projects);
         } else {
           toast.error(`Unexpected response status: ${response.status}`);
         }
-      } catch (error : any) {
+      } catch (error: any) {
         console.error("An unexpected error occurred:", error);
       }
     }

@@ -83,11 +83,22 @@ const createProject = async (req: ProjectRequest): Promise<Project | null> => {
 
 }
 
-const getAllProject = async (): Promise<Project[] | null> => {
+const getAllProject = async (email : string): Promise<Project[] | null> => {
     try {
+        const user = await db.getRepository(User).findOne({
+            where: {
+                email: email
+            }
+        })
+        console.log(user);
+        if (!user) {
+            console.error('User not found');
+            return null;
+        }
         const projects = await db.getRepository(Project)
             .createQueryBuilder('project')
             .orderBy('project.time.updated_at', 'DESC')
+            .where('project.user.id = :userId', {userId: user.id})
             .getMany();
 
         console.log(projects);

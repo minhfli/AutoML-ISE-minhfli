@@ -26,7 +26,8 @@ const createProject = async (req: Request, res: Response) => {
 
 const getAllProject = async (req: Request, res: Response) => {
     try {
-        const projects = await ProjectServices.getAllProject();
+        const { email } = req.body;
+        const projects = await ProjectServices.getAllProject(email);
         if (projects) {
             const response = projects.map(project => ({
                 id: project.id,
