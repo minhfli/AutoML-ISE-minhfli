@@ -24,7 +24,7 @@ export default function Page() {
             setLoading(true)
             const userEmail = localStorage.getItem('userEmail') as string;
             const projectId = pathName.split("/")[2];
-            const res = await axios.post('/api/projects/train', {
+            const res = await axios.post('/api/projects/ImageClassification/train', {
                 userEmail: userEmail,
                 projectId: projectId,
             })
@@ -33,7 +33,7 @@ export default function Page() {
                 const {validation_accuracy, training_evaluation_time} = res.data;
                 toast.success(`Train thành công với độ chính xác: ${validation_accuracy}`);
                 toast.success("Thời gian train và evaluate" + training_evaluation_time);
-                router.push(`/projects/${projectId}/predict`);
+                router.push(`/projects/${projectId}/ImageClassification/predict`);
             } else {
                 toast.error("Train thất bại :(");
             }

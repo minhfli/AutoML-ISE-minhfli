@@ -83,6 +83,32 @@ const createProject = async (req: ProjectRequest): Promise<Project | null> => {
 
 }
 
+const getAllProject = async (email : string): Promise<Project[] | null> => {
+    try {
+        const user = await db.getRepository(User).findOne({
+            where: {
+                email: email
+            }
+        })
+        console.log(user);
+        if (!user) {
+            console.error('User not found');
+            return null;
+        }
+        const projects = await db.getRepository(Project)
+            .createQueryBuilder('project')
+            .orderBy('project.time.updated_at', 'DESC')
+            .where('project.user.id = :userId', {userId: user.id})
+            .getMany();
+
+        console.log(projects);
+        return projects;
+    } catch (error: any) {
+        console.error("Error to get all data from project table");
+        throw error;
+    }
+};
+
 const TrainImageClassifierProject = async (req: ProjectTrainRequest) => {
     try {
         const project = await GetProjectFromId(req.projectId);
@@ -101,6 +127,7 @@ const TrainImageClassifierProject = async (req: ProjectTrainRequest) => {
             console.log("Accuracy:", result.validation_accuracy);
             console.log("Time:", result.training_evaluation_time);
             project.validation_accuracy = result.validation_accuracy;
+            project.status = "SUCCESS",
             await db.getRepository(Project).save(project);
         }
         return result;
@@ -157,6 +184,7 @@ const GetProjectFromId = async (id: string): Promise<Project | null> => {
 
 export const ProjectServices = {
     createProject,
+    getAllProject,
     TrainImageClassifierProject,
     GetProjectFromId,
     predictProject

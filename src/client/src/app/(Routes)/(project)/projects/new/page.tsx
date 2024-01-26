@@ -47,12 +47,12 @@ export default function Index() {
             [event.target.id]: event.target.value,
         }))
     };
-    
+
 
     async function onSubmit(form: formSchemaType) {
         try {
             toast.loading("Creating project...");
-            const res = await axios.post("/api/projects", {
+            const res = await axios.post("/api/projects/createProject", {
                 email: form.email,
                 name: form.name,
                 task: form.task,
@@ -63,7 +63,8 @@ export default function Index() {
                 toast.dismiss();
                 const {project_name, project_id} = res.data;
                 toast.success(`Project ${project_name} created successfully.`);
-                router.push(`/projects/${project_id}/data`);
+                const formattedTask = form.task.replace(/\s+/g, '');
+                router.push(`/projects/${project_id}/${formattedTask}/data`);
             } else {
                 toast.error(`Unexpected response status: ${res.status}`);
             }
@@ -81,8 +82,8 @@ export default function Index() {
         }
     }
     //Perform localStorage action
-    
-    
+
+
 
 
     //

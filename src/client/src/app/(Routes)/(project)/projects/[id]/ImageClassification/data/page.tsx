@@ -4,7 +4,7 @@ import Axios from "axios";
 import {toast} from "sonner";
 import {Progress} from "@/src/components/ui/progress";
 import {usePathname, useRouter} from "next/navigation";
-import ModalUploadFile from "@/src/app/(Routes)/(project)/projects/[id]/data/ModalUploadFile";
+import ModalUploadFile from "@/src/app/(Routes)/(project)/projects/[id]/ImageClassification/data/ModalUploadFile";
 import httpStatusCode from "@/src/app/errors/httpStatusCode";
 import {Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle} from "@/src/components/ui/dialog";
 import {LoaderIcon} from "lucide-react";
@@ -165,7 +165,7 @@ export default function App() {
         if (res.status === httpStatusCode.CREATED) {
             toast.success("Upload thành công lên cloud !");
             setUploadCloud(false)
-            route.push(`/projects/${projectId}/train`);
+            route.push(`/projects/${projectId}/ImageClassification/train`);
         } else {
             toast.error("Upload thất bại");
         }
