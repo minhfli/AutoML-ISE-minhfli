@@ -1,14 +1,15 @@
 import {Router} from "express";
 import {ProjectController} from "../../../controllers/project";
+import ImageClassification from "./ImageClassification";
 
 const projectRouter = Router();
 
-projectRouter.post("/projects", ProjectController.createProject);
+projectRouter.post("/projects/createProject", ProjectController.createProject);
+
+projectRouter.post("/projects/getAllProject", ProjectController.getAllProject);
 
 projectRouter.get("/projects/:projectId", ProjectController.getProjectById);
 
-projectRouter.post("/projects/train", ProjectController.trainProject);
-
-projectRouter.post("/projects/predict", ProjectController.predictProject);
+projectRouter.use("/projects/ImageClassification", ImageClassification);
 
 export default projectRouter;

@@ -1,37 +1,31 @@
-import { NextRequest, NextResponse } from 'next/server';
+import config from "@/config/config";
 import axios from "axios";
-import config from '@/config/config';
+import {NextRequest, NextResponse} from "next/server";
 import httpStatusCode from "@/src/app/errors/httpStatusCode";
 
 export async function POST(req: NextRequest) {
     try {
-        const body = await req.json();
-        console.log(body);
-
-        const response = await axios.post(`${config.backendURL}/projects/`, body);
-
-        if (response.status === httpStatusCode.CREATED) {
+        const data = await req.json();
+        const response = await axios.post(`${config.backendURL}/projects/ImageClassification/train`, data);
+        if (response.status === httpStatusCode.OK) {
             return new NextResponse(JSON.stringify(response.data), {
-                status: httpStatusCode.CREATED,
-                headers: {
-                    'Content-Type': 'application/json'
-                }
+                status: httpStatusCode.OK,
             });
         }
-        return new NextResponse(JSON.stringify({ error: response.data }), {
+        return new NextResponse(JSON.stringify({error: response.data}), {
             status: httpStatusCode.BAD_REQUEST,
             headers: {
                 'Content-Type': 'application/json'
             }
         });
-
     } catch (error: any) {
         console.error('Error during POST request:', error);
-        return new NextResponse(JSON.stringify({ error: error.message }), {
+        return new NextResponse(JSON.stringify({error: error.message}), {
             status: httpStatusCode.BAD_REQUEST,
             headers: {
                 'Content-Type': 'application/json'
             }
         });
     }
+
 }

@@ -27,6 +27,11 @@ export class Project {
     })
     trainingTime: string
 
+    @Column({
+        default: "IN PROGRESS"
+    })
+    status: string
+
     @Index()
     @Column({
         type: "enum",

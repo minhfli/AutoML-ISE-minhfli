@@ -9,8 +9,8 @@ type CsvRow = {
 import Axios from "axios";
 import { toast } from "sonner";
 import { Progress } from "@/src/components/ui/progress";
-import { usePathname, useRouter, useSearchParams } from "next/navigation";
-import ModalUploadFile from "@/src/app/(Routes)/(project)/projects/[id]/data/ModalUploadFile";
+import { usePathname, useRouter } from "next/navigation";
+import ModalUploadFile from "@/src/app/(Routes)/(project)/projects/[id]/ImageClassification/data/ModalUploadFile";
 import httpStatusCode from "@/src/app/errors/httpStatusCode";
 import {
   Dialog,
@@ -53,17 +53,9 @@ export default function App() {
   //total pages
   const totalPages = Math.ceil(csvData.length / 10);
 
-  let searchParams = useSearchParams();
-  const search = searchParams.get("p");
-  console.log(search);
   const startIndex = countPage * 10;
   const endIndex = startIndex + 10;
 
-  useEffect(() => {
-    if (search) {
-      setCountPage(parseInt(search));
-    }
-  }, [search]);
   const handlePageChange = (newPage: any) => {
     // Validation to ensure newPage is within the valid range
     const validNewPage = Math.min(Math.max(1, newPage), totalPages);
@@ -112,8 +104,7 @@ export default function App() {
   const handleRadioChange = (event: any) => {
     setUploadMethod(event.target.value);
   };
-  const isBlurred = (method :any) => !uploadMethod || uploadMethod !== method;
-
+  const isBlurred = (method: any) => !uploadMethod || uploadMethod !== method;
 
   const handleFileChange = (event: ChangeEvent<HTMLInputElement>) => {
     if (!event.target.files) return;
@@ -173,7 +164,6 @@ export default function App() {
           file: file,
         };
       });
-
       setFormDataInfo(newFormDataInfo);
 
       // Array.fromAsync thi ok hon :v
@@ -229,7 +219,7 @@ export default function App() {
     if (res.status === httpStatusCode.CREATED) {
       toast.success("Upload thành công lên cloud !");
       setUploadCloud(false);
-      route.push(`/projects/${projectId}/train`);
+      route.push(`/projects/${projectId}/ImageClassification/train`);
     } else {
       toast.error("Upload thất bại");
     }
@@ -247,7 +237,6 @@ export default function App() {
       }
     }
   }, [progress, mapFolder]);
-
   return (
     <div>
       <div className="container mx-auto p-4">
@@ -319,75 +308,73 @@ export default function App() {
             />
             {errorMessage && <p className="text-red-500">{errorMessage}</p>}
           </div>
+          {isUploading && (
+            <div className="flex flex-col items-center justify-center  ">
+              <p className="mb-2 text-sm text-gray-700">{fileName}</p>
+              <Progress value={progress} className="w-[50%]" />
+            </div>
+          )}
+
+          {modalVisible &&
+            (uploadCloud ? (
+              <Dialog open={true}>
+                <DialogContent>
+                  <DialogHeader>
+                    <DialogTitle>
+                      Uploading data to the cloud (It might take a few secs)
+                    </DialogTitle>
+                    <DialogDescription className="flex justify-center">
+                      <LoaderIcon className="h-10 w-10 animate-spin" />
+                    </DialogDescription>
+                  </DialogHeader>
+                </DialogContent>
+              </Dialog>
+            ) : (
+              <ModalUploadFile
+                folder={modalInfo}
+                onClose={closeModal}
+                onSubmit={submitModal}
+                progress={progress}
+                mapFolder={mapFolder.current}
+              />
+            ))}
         </div>
-      </div>
-      
-      {uploadMethod === "csvJson" && (
-        <div className="container mx-auto p-4">
-          {csvData.length > 0 && (
-            <>
-              <div className="overflow-x-auto">
-                <table className="table w-full">
-                  <thead>
-                    <tr>
-                      {Object.keys(csvData[0]).map((header) => (
-                        <th key={header}>{header}</th>
-                      ))}
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {csvData.slice(startIndex, endIndex).map((row, index) => (
-                      <tr key={index}>
-                        {Object.values(row).map((value, colIndex) => (
-                          <td key={colIndex}>{value}</td>
+        {uploadMethod === "csvJson" && (
+          <div className="container mx-auto p-4">
+            {csvData.length > 0 && (
+              <>
+                <div className="overflow-x-auto">
+                  <table className="table w-full">
+                    <thead>
+                      <tr>
+                        {Object.keys(csvData[0]).map((header) => (
+                          <th key={header}>{header}</th>
                         ))}
                       </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
-              <div className="container mx-auto p-4">
-                <PaginationControls
-                  currentPage={countPage + 1} // Adjust if you are using zero-based index for countPage
-                  totalPages={totalPages}
-                  onPageChange={handlePageChange}
-                />
-              </div>
-            </>
-          )}
-        </div>
-      )}
-      
-      {isUploading && (
-        <div className="flex flex-col items-center justify-center  ">
-          <p className="mb-2 text-sm text-gray-700">{fileName}</p>
-          <Progress value={progress} className="w-[50%]" />
-        </div>
-      )}
-
-      {modalVisible &&
-        (uploadCloud ? (
-          <Dialog open={true}>
-            <DialogContent>
-              <DialogHeader>
-                <DialogTitle>
-                  Uploading data to the cloud (It might take a few secs)
-                </DialogTitle>
-                <DialogDescription className="flex justify-center">
-                  <LoaderIcon className="h-10 w-10 animate-spin" />
-                </DialogDescription>
-              </DialogHeader>
-            </DialogContent>
-          </Dialog>
-        ) : (
-          <ModalUploadFile
-            folder={modalInfo}
-            onClose={closeModal}
-            onSubmit={submitModal}
-            progress={progress}
-            mapFolder={mapFolder.current}
-          />
-        ))}
+                    </thead>
+                    <tbody>
+                      {csvData.slice(startIndex, endIndex).map((row, index) => (
+                        <tr key={index}>
+                          {Object.values(row).map((value, colIndex) => (
+                            <td key={colIndex}>{value}</td>
+                          ))}
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+                <div className="container mx-auto p-4">
+                  <PaginationControls
+                    currentPage={countPage + 1} // Adjust if you are using zero-based index for countPage
+                    totalPages={totalPages}
+                    onPageChange={handlePageChange}
+                  />
+                </div>
+              </>
+            )}
+          </div>
+        )}
+      </div>
     </div>
   );
 }

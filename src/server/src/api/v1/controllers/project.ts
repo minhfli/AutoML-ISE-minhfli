@@ -24,6 +24,32 @@ const createProject = async (req: Request, res: Response) => {
     }
 }
 
+const getAllProject = async (req: Request, res: Response) => {
+    try {
+        const { email } = req.body;
+        const projects = await ProjectServices.getAllProject(email);
+        if (projects) {
+            const response = projects.map(project => ({
+                id: project.id,
+                name: project.name,
+                description : project.description,
+                updated_at : project.time.updated_at,
+                status : project.status,
+            }))
+            res.status(httpStatusCodes.OK).json(response);
+        } else {
+            res.status(httpStatusCodes.BAD_REQUEST).json({
+                message: "Could not be get all project from db.",
+            });
+        }
+    } catch (error : any) {
+        console.error('Get all project failed:', error);
+        res.status(httpStatusCodes.INTERNAL_SERVER_ERROR).json({
+            message: "An unexpected error occurred.",
+        });
+    }
+}
+
 const trainProject = async (req: Request, res: Response) => {
     let {userEmail, projectId} = req.body as ProjectTrainRequest;
     try {
@@ -92,6 +118,7 @@ const getProjectById = async (req: Request, res: Response) => {
 }
 export const ProjectController = {
     createProject,
+    getAllProject,
     trainProject,
     predictProject,
     getProjectById
