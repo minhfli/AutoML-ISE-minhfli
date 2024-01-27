@@ -19,7 +19,7 @@ class AutogluonTrainer(object):
         self.parse_args(kwargs)
 
     def parse_args(self, kwargs: Optional[dict] = None):
-        if not kwargs: return
+        if kwargs is None: return
         self.model_args = kwargs.setdefault("ag_model_args", {
             "problem_type": "classification",
         })

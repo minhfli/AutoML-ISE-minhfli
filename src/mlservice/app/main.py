@@ -7,6 +7,7 @@ torch.cuda.empty_cache()
 torch.set_float32_matmul_precision("medium")
 
 from app.image_classifier import routes as image_classifier_routes
+from app.tabular_trainer import routes as tabular_classifier_routes
 
 app = FastAPI()
 
@@ -22,6 +23,7 @@ def read_root():
 
 
 app.include_router(image_classifier_routes.router)
+app.include_router(tabular_classifier_routes.router)
 
 # @serve.deployment(num_replicas=1, ray_actor_options={"num_cpus": 8, "num_gpus": 1})
 # @serve.ingress(app)
