@@ -1,5 +1,5 @@
-import {Project, Task, User} from "../models";
-import {db} from "../db";
+import { Project, Run, Task, User } from "../models";
+import { db } from "../db";
 import config from "../../../config";
 import axios from "axios";
 import httpStatusCodes from "../errors/httpStatusCodes";
@@ -9,10 +9,10 @@ export type ProjectRequest = {
     name: string;
     task: string;
     description: string;
-    training_time: string;
 };
 
 export type ProjectTrainRequest = {
+    training_time: string;
     userEmail: string;
     projectId: string;
 }
@@ -53,7 +53,7 @@ const convertStringTask = (task: string): Task => {
 };
 
 const createProject = async (req: ProjectRequest): Promise<Project | null> => {
-    let {email, name, task, training_time, description} = req;
+    let { email, name, task, description } = req;
     try {
         console.log("email when create project: " + email)
         const user = await db.getRepository(User).findOne({
@@ -70,7 +70,6 @@ const createProject = async (req: ProjectRequest): Promise<Project | null> => {
         project.description = description;
         project.task = convertStringTask(task);
         project.user = user;
-        project.trainingTime = training_time;
 
         await db.getRepository(Project).save(project);
 
@@ -83,7 +82,7 @@ const createProject = async (req: ProjectRequest): Promise<Project | null> => {
 
 }
 
-const getAllProject = async (email : string): Promise<Project[] | null> => {
+const getAllProject = async (email: string): Promise<Project[] | null> => {
     try {
         const user = await db.getRepository(User).findOne({
             where: {
@@ -97,8 +96,8 @@ const getAllProject = async (email : string): Promise<Project[] | null> => {
         }
         const projects = await db.getRepository(Project)
             .createQueryBuilder('project')
-            .orderBy('project.time.updated_at', 'DESC')
-            .where('project.user.id = :userId', {userId: user.id})
+            .orderBy('project.updated_at', 'DESC')
+            .where('project.user.id = :userId', { userId: user.id })
             .getMany();
 
         console.log(projects);
@@ -112,23 +111,42 @@ const getAllProject = async (email : string): Promise<Project[] | null> => {
 const TrainImageClassifierProject = async (req: ProjectTrainRequest) => {
     try {
         const project = await GetProjectFromId(req.projectId);
+        console.log("project req id:", req.projectId);
         if (!project) {
             console.error('Project not found');
             return null;
         }
+        console.log("project id:", project.id);
+        const run = new Run();
+        await db.getRepository(Run).save(run);
+        run.name = `Model-v${run.id}`;
+        run.project = project;
+        console.log(run.project);
+        await db.getRepository(Run).save(run);
+
         // convert email to -> without @ <=> bucket name
         req.userEmail = req.userEmail.split('@')[0];
         const response = await axios.post(`${config.mlURL}/api/image_classifier/train`, {
+            training_time: req.training_time,
             userEmail: req.userEmail,
             projectName: project.name,
+            runName: run.name,
         });
         const result = response.data;
         if (response.status === httpStatusCodes.OK) {
             console.log("Accuracy:", result.validation_accuracy);
             console.log("Time:", result.training_evaluation_time);
+
             project.validation_accuracy = result.validation_accuracy;
             project.status = "SUCCESS",
+            run.status = "SUCCESS";
+            run.val_accuracy = result.validation_accuracy;
+
+            await db.getRepository(Run).save(run);
             await db.getRepository(Project).save(project);
+        } else {
+            run.status = "ERROR";
+            await db.getRepository(Run).save(run);
         }
         return result;
     } catch (error) {

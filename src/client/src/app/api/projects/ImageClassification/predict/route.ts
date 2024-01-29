@@ -8,6 +8,7 @@ export async function POST(req: NextRequest) {
         const data = await req.formData();
         const userEmail = data.get("userEmail") as string;
         const projectId = data.get("projectId") as string;
+        const runName = data.get("runName") as string;
         const projectInfo = await axios.get(`${config.backendURL}/projects/${projectId}`);
 
         if (projectInfo.status !== httpStatusCode.OK) {
@@ -25,6 +26,7 @@ export async function POST(req: NextRequest) {
 
         formData.append("userEmail", userEmail.split('@')[0]);
         formData.append("projectName", projectName);
+        formData.append("runName", runName);
         formData.append("image", image, image.name);
 
         if (!(image instanceof File)) {

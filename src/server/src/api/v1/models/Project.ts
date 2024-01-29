@@ -1,4 +1,4 @@
-import {Entity, Column, PrimaryGeneratedColumn, ManyToOne, OneToMany, Index, PrimaryColumn} from "typeorm"
+import {Entity, Column, PrimaryGeneratedColumn, ManyToOne, OneToMany, Index, PrimaryColumn, CreateDateColumn, UpdateDateColumn} from "typeorm"
 import {Time} from "./Time";
 import {Task} from "./Task";
 import {User} from "./User";
@@ -40,8 +40,11 @@ export class Project {
     })
     task: Task
 
-    @Column(() => Time)
-    time: Time
+    @CreateDateColumn({default: () => "CURRENT_TIMESTAMP"})
+    created_at: Date
+
+    @UpdateDateColumn({default: () => "CURRENT_TIMESTAMP", onUpdate: "CURRENT_TIMESTAMP"})
+    updated_at: Date
 
     @ManyToOne(() => User, (user) => user.projects)
     user: User
