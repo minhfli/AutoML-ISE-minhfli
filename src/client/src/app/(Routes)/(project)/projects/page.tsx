@@ -70,7 +70,7 @@ const ProjectCard: React.FC<ProjectCardProps> = ({
     if (status === "IN PROGRESS") {
       route.push(`/projects/${id}/ImageClassification/data`);
     } else if (status === "SUCCESS") {
-      route.push(`/projects/${id}/ImageClassification/predict`);
+      route.push(`/projects/${id}/ImageClassification/train/view`);
     }
   };
 

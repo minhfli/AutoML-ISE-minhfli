@@ -30,8 +30,8 @@ memory = joblib.Memory("/tmp", verbose=0, mmap_mode="r", bytes_limit=1024*1024*1
 def load_model_from_path(model_path: str) -> MultiModalPredictor:
     return MultiModalPredictor.load(model_path)
 
-async def load_model(user_name: str, project_name: str) -> MultiModalPredictor:
-    model_path = find_latest_model(f"/tmp/{user_name}/{project_name}/trained_models")
+async def load_model(user_name: str, project_name: str, run_name: str) -> MultiModalPredictor:
+    model_path = find_latest_model(f"/tmp/{user_name}/{project_name}/trained_models/{run_name}")
     return load_model_from_path(model_path)
 
 
@@ -41,6 +41,7 @@ async def handler(request: TrainingRequest):
     temp_dataset_path = ""
     start = perf_counter()
     print("Training request received")
+    request.training_argument['ag_fit_args']['time_limit'] = request.training_time
     try:
         # temp folder to store dataset and then delete after training
         temp_dataset_path = Path(f"/tmp/{request.userEmail}/{request.projectName}/datasets.zip")
@@ -57,8 +58,8 @@ async def handler(request: TrainingRequest):
             raise ValueError("Error in downloading folder")
 
         user_dataset_path = f"/tmp/{request.userEmail}/{request.projectName}/datasets"
-        user_model_path = f"/tmp/{request.userEmail}/{request.projectName}/trained_models/{uuid.uuid4()}"
-        
+        user_model_path = f"/tmp/{request.userEmail}/{request.projectName}/trained_models/{request.runName}/{uuid.uuid4()}"
+
         create_folder(Path(user_dataset_path))
 
         with ZipFile(temp_dataset_path, 'r') as zip_ref:
@@ -75,7 +76,7 @@ async def handler(request: TrainingRequest):
                    Path(f"{user_dataset_path}/val.csv"))
         create_csv(Path(f"{user_dataset_path}/split/test"),
                    Path(f"{user_dataset_path}/test.csv"))
-        
+
         remove_folders_except(Path(user_dataset_path), "split")
 
         trainer = AutogluonTrainer(request.training_argument)
@@ -112,20 +113,22 @@ async def handler(request: TrainingRequest):
 async def predict(
     userEmail: str = Form("lexuanan18102004"),
     projectName: str = Form("flower-classifier"),
+    runName: str = Form("Model-v0"),
     image : UploadFile = File(...)
 ):
+    print(userEmail)
+    print("Run Name:", runName)
     try:
-        print(userEmail)
-        print(projectName)
+
         # write the image to a temporary file
         temp_image_path = f"/tmp/{userEmail}/{projectName}/temp.jpg"
         os.makedirs(Path(temp_image_path).parent, exist_ok=True)
         with open(temp_image_path, "wb") as buffer:
             buffer.write(await image.read())
-        
+
         start_load = perf_counter()
         # TODO : Load model with any path
-        model = await load_model(userEmail, projectName)
+        model = await load_model(userEmail, projectName, runName)
         load_time = perf_counter() - start_load
         inference_start = perf_counter()
         predictions = model.predict(temp_image_path,
@@ -166,7 +169,7 @@ async def get_accuracy(
     project_name: str = Form("flower-classifier"),
 ):
     try:
-        model = await load_model(user_name, project_name)  
+        model = await load_model(user_name, project_name)
         test_data_path = f"/tmp/{user_name}/{project_name}/datasets/test.csv"
         acc = await evaluate_async(model, test_data_path)
         return {
@@ -175,4 +178,3 @@ async def get_accuracy(
     except Exception as e:
         raise HTTPException(
             status_code=500, detail=f"Error in getting accuracy: {str(e)}")
-

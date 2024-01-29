@@ -16,7 +16,6 @@ type formSchemaType = {
     name: string;
     task: string;
     description?: string;
-    training_time: string;
 };
 
 export default function Index() {
@@ -27,7 +26,6 @@ export default function Index() {
         name: '',
         description: '',
         task: 'Image Classification',
-        training_time: '60'
     });
     useEffect(() => {
         // Access localStorage only on the client side
@@ -57,7 +55,6 @@ export default function Index() {
                 name: form.name,
                 task: form.task,
                 description: form.description,
-                training_time: form.training_time,
             });
             if (res.status === httpStatusCode.CREATED || res.status === 200) {
                 toast.dismiss();
@@ -136,7 +133,7 @@ export default function Index() {
                                 </div>
 
 
-                                <div className="flex flex-col space-y-1.75">
+                                {/* <div className="flex flex-col space-y-1.75">
                                     <Label htmlFor="training_time">Training time (The longer the better)</Label>
                                     <Input id="training_time"
                                            type="number"
@@ -147,7 +144,7 @@ export default function Index() {
                                            required={true}
                                     />
 
-                                </div>
+                                </div> */}
                                 <div className="flex flex-col space-y-1.5">
                                     <Label htmlFor="task">Task</Label>
                                     <Select onValueChange={

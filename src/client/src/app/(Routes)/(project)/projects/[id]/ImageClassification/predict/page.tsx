@@ -19,6 +19,8 @@ export default function Predict() {
     const [loading, setLoading] = useState<boolean>(false);
     const [predictions, setPredictions] = useState<string>("");
     const [InferenceTime, setInferenceTime] = useState<number>(0);
+    const runName = localStorage.getItem("runName") as string;
+
     useEffect(() => {
         let fetchData = async () => {
             const response = await axios.post('/api/projects/info', {
@@ -47,10 +49,12 @@ export default function Predict() {
 
             const userEmail = localStorage.getItem("userEmail") as string;
             const projectId = pathName.split("/")[2];
+
             const formData = new FormData();
             formData.append("userEmail", userEmail);
             formData.append("projectId", projectId);
             formData.append("image", file);
+            formData.append("runName", runName);
             try {
                 setLoading(true);
                 setPredictions("");
@@ -85,7 +89,7 @@ export default function Predict() {
             Switch Model:
           </span>
                     <button className="rounded border  border-gray-300 bg-white px-4 py-2 shadow-sm">
-                        v1 flower-classifier-biol0/1
+                        {runName} flower-classifier-biol0/1
                     </button>
                 </div>
 

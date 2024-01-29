@@ -9,7 +9,7 @@ const gcpCredentials = process.env.GCP_CREDENTIALS || "../service-account-gcs.js
 const accessTokenSecret = process.env.REFRESH_TOKEN_SECRET || "meowwwww"
 const refreshTokenSecret = process.env.REFRESH_TOKEN_SECRET || "linhxinhgai"
 const nextApiUrl = process.env.NEXT_APP_API_URL || "http://localhost:3000/api"
-const mlURL = process.env.ML_URL || "http://localhost:8000"
+const mlURL = process.env.ML_URL || "http://localhost:8000/api"
 const config = {
     backendURL,
     accessTokenSecret,

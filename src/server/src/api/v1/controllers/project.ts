@@ -3,9 +3,9 @@ import {ProjectTrainRequest, ProjectRequest, ProjectServices, ProjectPredictRequ
 import httpStatusCodes from "../errors/httpStatusCodes";
 
 const createProject = async (req: Request, res: Response) => {
-    let {email, name, task, training_time, description} = req.body as ProjectRequest;
+    let {email, name, task, description} = req.body as ProjectRequest;
     try {
-        const project = await ProjectServices.createProject({email, name, task, training_time, description});
+        const project = await ProjectServices.createProject({email, name, task, description});
         if (project) {
             res.status(httpStatusCodes.CREATED).json({
                 project_name: project.name,
@@ -33,7 +33,7 @@ const getAllProject = async (req: Request, res: Response) => {
                 id: project.id,
                 name: project.name,
                 description : project.description,
-                updated_at : project.time.updated_at,
+                updated_at : project.updated_at,
                 status : project.status,
             }))
             res.status(httpStatusCodes.OK).json(response);
@@ -51,9 +51,10 @@ const getAllProject = async (req: Request, res: Response) => {
 }
 
 const trainProject = async (req: Request, res: Response) => {
-    let {userEmail, projectId} = req.body as ProjectTrainRequest;
+    let {training_time, userEmail, projectId} = req.body as ProjectTrainRequest;
+    console.log({training_time, userEmail, projectId});
     try {
-        const response = await ProjectServices.TrainImageClassifierProject({userEmail, projectId});
+        const response = await ProjectServices.TrainImageClassifierProject({training_time, userEmail, projectId});
 
         if (response) {
             res.status(httpStatusCodes.OK).json({

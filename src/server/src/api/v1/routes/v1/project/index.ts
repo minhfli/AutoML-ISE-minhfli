@@ -4,12 +4,12 @@ import ImageClassification from "./ImageClassification";
 
 const projectRouter = Router();
 
-projectRouter.post("/projects/createProject", ProjectController.createProject);
+projectRouter.post("/createProject", ProjectController.createProject);
 
-projectRouter.post("/projects/getAllProject", ProjectController.getAllProject);
+projectRouter.post("/getAllProject", ProjectController.getAllProject);
 
-projectRouter.get("/projects/:projectId", ProjectController.getProjectById);
+projectRouter.get("/:projectId", ProjectController.getProjectById);
 
-projectRouter.use("/projects/ImageClassification", ImageClassification);
+projectRouter.use("/ImageClassification", ImageClassification);
 
 export default projectRouter;

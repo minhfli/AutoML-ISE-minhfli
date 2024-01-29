@@ -6,28 +6,46 @@ import { Model } from './Model';
 
 @Entity()
 export class Run {
-    @PrimaryGeneratedColumn("uuid")
-    id: string;
+    @PrimaryGeneratedColumn()
+    id: number;
 
-    @Column()
+    @Column({
+        default: ""
+    })
     name: string
 
-    @Column()
+    @Column({
+        default: "IN PROGRESS"
+    })
     status: string
 
-    @Column()
+    @Column({
+        default: ""
+    })
     best_model_url: string
 
-    @Column()
+    @Column({
+        type: "float",
+        default: 0
+    })
     train_accuracy: number
 
-    @Column()
+    @Column({
+        type: "float",
+        default: 0
+    })
     train_loss: number
 
-    @Column()
+    @Column({
+        type: "float",
+        default: 0
+    })
     val_accuracy: number
 
-    @Column()
+    @Column({
+        type: "float",
+        default: 0
+    })
     val_loss: number
 
     @ManyToOne(() => Project, project => project.runs)
