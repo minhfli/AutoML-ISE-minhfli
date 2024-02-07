@@ -6,7 +6,7 @@ import helmet from 'helmet'
 import multer from "multer";
 import morgan from "morgan";
 
-import {db, GCPStorage} from "./src/api/v1/db";
+import {db} from "./src/api/v1/db";
 import config from "./src/config";
 import routeV1 from "./src/api/v1/routes/v1";
 
@@ -30,7 +30,6 @@ app.use(cors(
     }
 ))
 
-
 app.use(express.json())
 
 app.use(helmet())
@@ -42,7 +41,6 @@ app.use(morgan('tiny'))
 
 
 app.use(express.static('public'))
-
 
 app.use(apiPrefix, routeV1)
 

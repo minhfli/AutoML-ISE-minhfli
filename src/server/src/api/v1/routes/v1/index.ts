@@ -8,6 +8,9 @@ const routeV1: Router = Router()
 
 routeV1.use('/auth', authRouter);
 routeV1.use('/projects', projectRouter);
-routeV1.use('/runs', runRouter);
-
+try {
+    routeV1.use('/runs', runRouter);
+} catch (e: any) {
+    console.log(e);
+}
 export default routeV1

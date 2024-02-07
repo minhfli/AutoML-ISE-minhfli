@@ -9,6 +9,7 @@ import time
 
 from app.image_classifier.available_checkpoint import Timm_Checkpoint
 
+
 class AutogluonTrainer(object):
     def __init__(self, kwargs: Optional[dict] = None):
         self.fit_args = None
@@ -37,7 +38,6 @@ class AutogluonTrainer(object):
                 "model.timm_image.checkpoint_name": Timm_Checkpoint.swin_small_patch4_window7_224
             }
         })
-    
 
     def train(self, train_data_path: Path, val_data_path: Path, model_path: Path) -> Union[MultiModalPredictor, None]:
         try:
@@ -46,12 +46,12 @@ class AutogluonTrainer(object):
             predictor = MultiModalPredictor(label="label", path=str(model_path), **self.model_args)
             logging.basicConfig(level=logging.DEBUG)
             predictor.fit(
-                train_data= pd.read_csv(train_data_path),
+                train_data=pd.read_csv(train_data_path),
                 tuning_data=str(val_data_path),
                 save_path=str(model_path),
                 **self.fit_args,
             )
-            
+
             print(predictor.fit_summary(4, True))
             self._logger.info(f"Training completed. Model saved to {model_path}")
             return predictor
@@ -77,13 +77,10 @@ class AutogluonTrainer(object):
 
         try:
             test_acc = predictor.evaluate(
-                pd.read_csv(test_data_path), metrics=metrics, chunk_size = 4096 ,realtime=True).get("accuracy")
+                pd.read_csv(test_data_path), metrics=metrics, chunk_size=4096, realtime=True).get("accuracy")
             return test_acc
         except Exception as e:
             print(f"An unexpected error occurred: {e}")
             return None
             # Handle any other unexpected exceptions.
             # It's often a good idea to log the exception details here for later debugging.
-            
-
-   

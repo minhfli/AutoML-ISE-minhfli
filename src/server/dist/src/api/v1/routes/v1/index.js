@@ -1,20 +1,15 @@
 "use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = require("express");
-// import isAuth from '#api/middlewares/auth.middleware.js'
-// import authRouter from './auth.route.js'
-// import projectRouter from './projects.route.js'
-// import labelRouter from './labels.route.js'
-// import datasetRouter from './datasets.route.js'
-// import imageRouter from './images.route.js'
-// import experimentRouter from './experiments.route.js'
-// import runRouter from './runs.route.js'
+const auth_1 = __importDefault(require("./auth"));
+const project_1 = __importDefault(require("./project"));
+const run_1 = __importDefault(require("./run"));
 const routeV1 = (0, express_1.Router)();
-// routeV1.use('/auth', authRouter)
-// routeV1.use('/projects', [isAuth], projectRouter)
-// routeV1.use('/labels', labelRouter)
-// routeV1.use('/datasets', datasetRouter)
-// routeV1.use('/images', imageRouter)
-// routeV1.use('/experiments', experimentRouter)
-// routeV1.use('/runs', runRouter)
+routeV1.use('/auth', auth_1.default);
+routeV1.use('/projects', project_1.default);
+routeV1.use('/runs', run_1.default);
 exports.default = routeV1;
+//# sourceMappingURL=index.js.map

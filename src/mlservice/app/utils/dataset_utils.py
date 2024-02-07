@@ -1,6 +1,5 @@
 import os
 from pathlib import Path
-from platformdirs import user_music_dir
 import splitfolders
 import shutil
 import glob

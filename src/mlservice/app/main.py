@@ -25,6 +25,9 @@ def read_root():
 app.include_router(image_classifier_routes.router)
 app.include_router(tabular_classifier_routes.router)
 
+
+# app.include_router(tabular_classifier_routes.router)
+
 # @serve.deployment(num_replicas=1, ray_actor_options={"num_cpus": 8, "num_gpus": 1})
 # @serve.ingress(app)
 # class FastAPIWrapper:
@@ -32,6 +35,7 @@ app.include_router(tabular_classifier_routes.router)
 @app.post("/uploadfile/")
 async def create_upload_file(file: UploadFile):
     return {"filename": file.filename}
+
 
 if __name__ == "__main__":
     # ray_app = FastAPIWrapper.bind()

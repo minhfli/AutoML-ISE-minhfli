@@ -1,4 +1,5 @@
 import dotenv from 'dotenv';
+import {S3} from "@aws-sdk/client-s3";
 
 dotenv.config();
 
@@ -9,7 +10,16 @@ const frontendURL = process.env.FRONTEND_URL || "http://localhost:3001";
 const mlURL = process.env.ML_URL || "http://localhost:3333"
 const gcpCredentials = process.env.GCP_CREDENTIALS || "service-account-gcs.json"
 const accessTokenRequest = process.env.ACCESS_TOKEN_SECRET || ""
-
+const awsAccessKeyId = process.env.AWS_ACCESS_KEY_ID || ""
+const awsSecretAccessKey = process.env.AWS_SECRET_ACCESS_KEY || ""
+const awsRegion = process.env.AWS_DEFAULT_REGION || "ap-southeast-1"
+const s3Bucket = new S3({
+    region: awsRegion,
+    credentials: {
+        accessKeyId: awsAccessKeyId,
+        secretAccessKey: awsSecretAccessKey
+    },
+});
 const config = {
     port,
     mongoURL,
@@ -18,6 +28,6 @@ const config = {
     mlURL,
     gcpCredentials,
     accessTokenRequest,
+    s3Bucket
 };
-console.log(config)
 export default config
