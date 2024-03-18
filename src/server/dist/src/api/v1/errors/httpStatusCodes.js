@@ -345,3 +345,4 @@ const StatusCodes = Object.freeze({
     NETWORK_AUTHENTICATION_REQUIRED: 511,
 });
 exports.default = StatusCodes;
+//# sourceMappingURL=httpStatusCodes.js.map

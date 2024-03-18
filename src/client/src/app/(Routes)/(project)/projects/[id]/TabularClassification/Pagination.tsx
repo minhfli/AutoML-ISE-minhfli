@@ -2,7 +2,7 @@ import React from 'react';
 export default function PaginationControls({ currentPage, totalPages, onPageChange }:{currentPage: number, totalPages:number, onPageChange: Function}): JSX.Element {
   // Calculate the page numbers to display
   const pageNumbers = [];
-
+  
   // Always add the first page
   pageNumbers.push(1);
 
@@ -38,7 +38,7 @@ export default function PaginationControls({ currentPage, totalPages, onPageChan
       Previous
     </button>
     {pageNumbers.map((number, index) =>
-      typeof number === 'number' ? (
+      typeof number === 'number' ? (  
         <button
           key={index}
           onClick={() => onPageChange(number)}
