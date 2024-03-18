@@ -1,14 +1,10 @@
 import asyncio
-from torch import mm
 from app.utils.dataset_utils import find_latest_model, split_data, create_csv, remove_folders_except, create_folder
 from app.utils import storage
 from app.image_classifier.model import TrainingRequest
 from app.image_classifier.autogluon_trainer import AutogluonTrainer
-from app.image_classifier.autogluon_predictor import AutogluonPredictor
-from contextlib import asynccontextmanager
 from fastapi import HTTPException
 import os
-import functools
 import joblib
 from pathlib import Path
 from time import perf_counter

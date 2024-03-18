@@ -7,7 +7,7 @@ torch.cuda.empty_cache()
 torch.set_float32_matmul_precision("medium")
 
 from app.image_classifier import routes as image_classifier_routes
-from app.tabular_trainer import routes as tabular_classifier_routes
+from app.tabular import routes as tabular_classifier_routes
 
 app = FastAPI()
 
@@ -32,10 +32,6 @@ app.include_router(tabular_classifier_routes.router)
 # @serve.ingress(app)
 # class FastAPIWrapper:
 #     pass
-@app.post("/uploadfile/")
-async def create_upload_file(file: UploadFile):
-    return {"filename": file.filename}
-
 
 if __name__ == "__main__":
     # ray_app = FastAPIWrapper.bind()
