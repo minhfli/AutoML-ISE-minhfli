@@ -42,7 +42,7 @@ export default function PaginationControls({ currentPage, totalPages, onPageChan
         <button
           key={index}
           onClick={() => onPageChange(number)}
-          className={`px-3 py-1 rounded-md border border-gray-300 ${currentPage === number ? 'bg-blue-500 text-white' : 'hover:bg-gray-100'}`}
+          className={`px-3 py-1 rounded-md  border border-gray-300 ${currentPage === number ? 'bg-blue-500 text-white' : 'hover:bg-gray-100'}`}
         >
           {number}
         </button>
