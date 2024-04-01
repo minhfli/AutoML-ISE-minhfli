@@ -138,7 +138,7 @@ const TrainImageClassifierProject = async (req: ProjectTrainRequest) => {
             console.log("Time:", result.training_evaluation_time);
 
             project.validation_accuracy = result.validation_accuracy;
-            project.status = "SUCCESS",
+            project.status = "SUCCESS";
             run.status = "SUCCESS";
             run.val_accuracy = result.validation_accuracy;
 

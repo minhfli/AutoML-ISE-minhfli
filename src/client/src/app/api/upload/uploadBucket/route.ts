@@ -51,7 +51,7 @@ export async function POST(req: NextRequest) {
                 status: httpStatusCode.CREATED,
             });
     } catch (error: any) {
-        // console.log(error);
+        console.log(error);
         return NextResponse.json(
             {success: false}, {
                 status: httpStatusCode.INTERNAL_SERVER_ERROR,
