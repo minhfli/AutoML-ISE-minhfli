@@ -34,7 +34,7 @@ def handler(bucket_name: str = "lexuanan18102004", project_name: str = "titanic-
             "project_name": project_name
         }
 
-        user_terraform_dir = f"/tmp/{bucket_name}/{project_name}"
+        user_terraform_dir = f"D:/tmp/{bucket_name}/{project_name}"
         os.makedirs(user_terraform_dir, exist_ok=True) if not os.path.exists(user_terraform_dir) else None
 
         absolute_path = os.path.abspath(os.path.dirname(__file__))

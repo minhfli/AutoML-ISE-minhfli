@@ -19,7 +19,7 @@ warnings.filterwarnings('ignore')
 
 router = APIRouter()
 
-memory = joblib.Memory("/tmp", verbose=0, mmap_mode="r", bytes_limit=1024 * 1024 * 1024 * 100)
+memory = joblib.Memory("D:/tmp", verbose=0, mmap_mode="r", bytes_limit=1024 * 1024 * 1024 * 100)
 
 
 @memory.cache
@@ -28,19 +28,20 @@ def load_model_from_path(model_path: str) -> MultiModalPredictor:
 
 
 async def load_model(user_name: str, project_name: str, run_name: str) -> MultiModalPredictor:
-    model_path = find_latest_model(f"/tmp/{user_name}/{project_name}/trained_models/{run_name}")
+    model_path = find_latest_model(f"D:/tmp/{user_name}/{project_name}/trained_models/{run_name}")
     return load_model_from_path(model_path)
 
 
 @router.post("/api/image_classifier/train", tags=["image_classifier"])
 async def handler(request: TrainingRequest):
+    print("Training request received")
     temp_dataset_path = ""
     start = perf_counter()
     print("Training request received")
     request.training_argument['ag_fit_args']['time_limit'] = request.training_time
     try:
         # temp folder to store dataset and then delete after training
-        temp_dataset_path = Path(f"/tmp/{request.userEmail}/{request.projectName}/datasets.zip")
+        temp_dataset_path = Path(f"D:/tmp/{request.userEmail}/{request.projectName}/datasets.zip")
 
         os.makedirs(temp_dataset_path.parent, exist_ok=True)
 
@@ -53,8 +54,8 @@ async def handler(request: TrainingRequest):
         if res is None or not res:
             raise ValueError("Error in downloading folder")
 
-        user_dataset_path = f"/tmp/{request.userEmail}/{request.projectName}/datasets"
-        user_model_path = f"/tmp/{request.userEmail}/{request.projectName}/trained_models/{request.runName}/{uuid.uuid4()}"
+        user_dataset_path = f"D:/tmp/{request.userEmail}/{request.projectName}/datasets"
+        user_model_path = f"D:/tmp/{request.userEmail}/{request.projectName}/trained_models/{request.runName}/{uuid.uuid4()}"
 
         create_folder(Path(user_dataset_path))
 
@@ -120,7 +121,7 @@ async def predict(
     try:
 
         # write the image to a temporary file
-        temp_image_path = f"/tmp/{userEmail}/{projectName}/temp.jpg"
+        temp_image_path = f"D:/tmp/{userEmail}/{projectName}/temp.jpg"
         os.makedirs(Path(temp_image_path).parent, exist_ok=True)
         with open(temp_image_path, "wb") as buffer:
             buffer.write(await image.read())
@@ -169,7 +170,7 @@ async def get_accuracy(
 ):
     try:
         model = await load_model(user_name, project_name)
-        test_data_path = f"/tmp/{user_name}/{project_name}/datasets/test.csv"
+        test_data_path = f"D:/tmp/{user_name}/{project_name}/datasets/test.csv"
         acc = await evaluate_async(model, test_data_path)
         return {
             "accuracy": acc,

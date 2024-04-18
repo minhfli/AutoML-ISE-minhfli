@@ -11,7 +11,7 @@ class Config(object):
         self.backend_host = os.environ.get('BACKEND_URL', 'localhost:3456/api/v1')
         self.frontend_host = os.environ.get('FRONTEND_URL', 'localhost:3001')
         self.redis_host = os.environ.get('REDIS_HOST', 'localhost:6379')
-        self.gcp_storage = os.environ.get('GCP_CREDENTIALS', '../../service-account-gcs.json')
+        self.gcp_storage = os.environ.get('GCP_CREDENTIALS', '')
 
 
 config = Config()

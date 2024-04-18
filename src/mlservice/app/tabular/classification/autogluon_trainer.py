@@ -2,14 +2,19 @@ import logging
 import os
 from pathlib import Path
 import asyncio
+from random import shuffle
 import subprocess
 import argparse
 from typing import Optional, Union
 from autogluon.tabular import TabularPredictor
+from mim import train
 import pandas as pd
 from autogluon.tabular.configs.hyperparameter_configs import get_hyperparameter_config
 import requests
 import time
+from sklearn.utils import shuffle
+from sklearn.model_selection import train_test_split
+
 
 start = time.time()
 
@@ -37,8 +42,8 @@ class AutogluonTrainer(object):
         self.has_special_types = len(
             self.data_args['image_cols']) + len(self.data_args['text_cols']) > 0
         self.fit_args = kwargs.setdefault("ag_fit_args", {
-            "time_limit": 180 if not self.has_special_types else 600,
-            'presets': 'medium_quality',
+            "time_limit": 500 if not self.has_special_types else 1000,
+            'presets': 'best_quality',
             'hyperparameters': get_hyperparameter_config('light' if not self.has_special_types else 'multimodal'),
         })
 
@@ -46,6 +51,7 @@ class AutogluonTrainer(object):
         TabularPredictor, None]:
         try:
             train_df = pd.read_csv(train_data_path)
+            
             feature_metadata = 'infer'
             if self.has_special_types:
                 from autogluon.tabular import FeatureMetadata
@@ -54,16 +60,26 @@ class AutogluonTrainer(object):
                     {col: ['image_path'] for col in self.data_args['image_cols']})
                 feature_metadata = feature_metadata.add_special_types(
                     {col: ['text'] for col in self.data_args['text_cols']})
-            predictor = TabularPredictor(label=label, path=str(model_path),
-                                         **self.model_args)
+            predictor = TabularPredictor(label=label, 
+                                        path=str(model_path),
+                                        eval_metric='accuracy',
+                                        **self.model_args)
             # logging.basicConfig(level=logging.DEBUG)
-            predictor.fit(
-                train_data=str(train_data_path),
-                tuning_data=str(
-                    val_data_path) if val_data_path is not None else None,
-                feature_metadata=feature_metadata,
-                **self.fit_args,
-            )
+            #split train and validation
+            train_df, val_df = train_test_split(train_df, test_size=0.1)
+            
+            predictor.fit(train_data=train_df,
+                        tuning_data=val_df,
+                        feature_metadata=feature_metadata, 
+                        **self.fit_args)
+
+            # predictor.fit(
+            #     train_data=str(train_data_path),
+            #     tuning_data=str(
+            #         val_data_path) if val_data_path is not None else None,
+            #     feature_metadata=feature_metadata,
+            #     **self.fit_args,
+            # )
 
             self._logger.info(
                 f"Training completed. Model saved to {model_path}")
@@ -97,8 +113,8 @@ if __name__ == "__main__":
     PROJECT_NAME = os.environ.get("PROJECT_NAME")
     try:
         parser = argparse.ArgumentParser()
-        parser.add_argument("--data-path", type=str,
-                            required=True, help="Path to training data")
+        #parser.add_argument("--data-path", type=str,
+        #                    required=True, help="Path to training data")
         parser.add_argument("--target", type=str,
                             default="Survived", help="Name of the target column")
 
@@ -109,8 +125,8 @@ if __name__ == "__main__":
                             help="Path to save model"
                             )
 
-        parser.add_argument("--test-path", type=str, default="",
-                            help="Path to test data")
+        # parser.add_argument("--test-path", type=str, default="",
+        #                     help="Path to test data")
 
         parser.add_argument("--test-size", type=float,
                             default=0.2, help="Size of the test dataset")
