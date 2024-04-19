@@ -183,7 +183,7 @@ class AutogluonTrainer(object):
 
     async def train_async(self, train_data_path: Path, val_data_path: Path, model_path: Path) -> Union[
             MultiModalPredictor, None]:
-        return await asyncio.to_thread(self.train, str(train_data_path), val_data_path, model_path)
+        return await asyncio.to_thread(self.train,'label', train_data_path, val_data_path, model_path)
 
     @staticmethod
     def evaluate(predictor: MultiModalPredictor, test_data_path: Path) -> Optional[float]:

@@ -42,7 +42,7 @@ async def handler(request: TrainingRequest):
     try:
         # temp folder to store dataset and then delete after training
         temp_dataset_path = Path(f"D:/tmp/{request.userEmail}/{request.projectName}/datasets.zip")
-
+        
         os.makedirs(temp_dataset_path.parent, exist_ok=True)
 
         res = await (storage.download_blob_async(request.userEmail,
@@ -73,24 +73,25 @@ async def handler(request: TrainingRequest):
                    Path(f"{user_dataset_path}/val.csv"))
         create_csv(Path(f"{user_dataset_path}/split/test"),
                    Path(f"{user_dataset_path}/test.csv"))
-
+        print("Split data successfully")
         remove_folders_except(Path(user_dataset_path), "split")
-
+        print("Remove folders except split successfully")
         trainer = AutogluonTrainer(request.training_argument)
+        print("Create trainer successfully")
         # training job của mình sẽ chạy ở đây
         model = await trainer.train_async(
             Path(f"{user_dataset_path}/train.csv"),
             Path(f"{user_dataset_path}/val.csv"),
             Path(f"{user_model_path}")
         )
-
+        print("Training model successfully")
         if model is None:
             raise ValueError("Error in training model")
 
         acc = AutogluonTrainer.evaluate(
             model, Path(f"{user_dataset_path}/test.csv"))
-
-        acc = 0.98
+        print("Evaluate model successfully")
+        #acc = 0.98
 
         end = perf_counter()
 
@@ -102,8 +103,9 @@ async def handler(request: TrainingRequest):
         }
 
     except Exception as e:
-        raise HTTPException(
-            status_code=500, detail=f"Error in downloading or extracting folder: {str(e)}")
+        print(e)
+        raise HTTPException(status_code=500, detail=f"Error in training: {str(e)}")
+        #raise HTTPException(status_code=500, detail=f"Error in downloading or extracting folder: {str(e)}")
     finally:
         if os.path.exists(temp_dataset_path):
             os.remove(temp_dataset_path)
