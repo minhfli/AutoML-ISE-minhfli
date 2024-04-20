@@ -1,6 +1,9 @@
 # gitignore Nam
 /src/server/node_modules
 
+# cloud
+service-account-gcs.json
+/service-account-gcs.json
 
 # Python
 **/venv/
