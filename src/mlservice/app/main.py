@@ -9,7 +9,7 @@ import os
 import sys
 sys.path.append(os.path.join(os.path.dirname(__file__), ".."))
 
-from image_classifier import routes as image_classifier_routes
+from image_classifier import local_routes as image_classifier_routes
 from tabular import routes as tabular_classifier_routes
 
 app = FastAPI()
